@@ -1,0 +1,34 @@
+﻿@model AGAServerDev.Contexts.PDM_SISTEMA
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PDM_SISTEMA</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PDM_TIPO_IMPLEMENTO.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PDM_TIPO_IMPLEMENTO.Descripcion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descripcion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descripcion)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdSistema }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

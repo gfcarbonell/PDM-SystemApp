@@ -1,0 +1,332 @@
+﻿<div class="container">
+    <form role="form" data-toggle="validator">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="headquarters">Sucursales - Sedes - Fundos</label>
+                <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters">
+                    <option data-tokens="000" value="000">---</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="machinery">Maquinarias</label>
+                <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="10" disabled></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="implementType">Tipos de implemento</label>
+                <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="10" disabled>
+                    <option data-tokens="000" value="000">---</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="implement">Implementos</label>
+                <select class="form-control selectpicker" data-live-search="true" id="implement" data-size="10" disabled></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="operator">Operarios</label>
+                <select class="form-control selectpicker" data-live-search="true" id="operator" data-size="10" disabled>
+                    <option data-tokens=1 value="1">Operario 1</option>
+                    <option data-tokens=2 value="2">Operario 2</option>
+                    <option data-tokens=3 value="3">Operario 3</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="turn">Turno</label>
+                <select class="form-control selectpicker" data-live-search="true" id="turn" disabled></select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="date">Fecha</label>
+                <input class="form-control" type="date" id="date" name="date" />
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <h5>Sistemas - Componentes</h5>
+            </div>
+            <div class="form-row table-responsive" id="table-system">
+                
+            </div>
+        </div>
+        <div class="form-row table-responsive">
+            <div>
+                <h5>Implementos - Componentes</h5>
+            </div>
+            <table class="table table-hover" id="table-implement">
+               
+            </table>
+        </div>
+        <div class="form-row justify-content-center">
+            <button type="submit" id="send-check-list" class="btn btn-success">Terminar diagnóstico</button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            // Select -> Desarrollo o Producción
+            const SERVER_PROD = true;
+            const URL = SERVER_PROD ? `http://172.20.4.182` : `http://localhost:54105`;
+            var now = new Date();
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+            $('#date').val(today);
+            //GET -> Controller:Tipo Implemento/Index
+            //Inicializar Tipo Implemento
+            $('#implementType').on('loaded.bs.select', (e) => {
+                axios.get(`${URL}/PDMTipoImplemento/IndexJSON`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
+                        $("#implementType").append(option)
+                        $("#implementType").selectpicker('refresh');
+                        $("#implementType").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+            //GET -> Controller:PDMTurno/Index
+            //Inicializar Turno
+            $('#turn').on('loaded.bs.select', (e) => {
+                axios.get(`${URL}/PDMTurno/`,{
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option = `<option data-tokens=${item.IdTurno} value=${item.IdTurno}> ${item.Descripcion} </option>`;
+                        $("#turn").append(option)
+                        $("#turn").selectpicker('refresh');
+                        $("#turn").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+            //GET -> Controller:Sede/Index
+            //Inicializars Sede
+            $('#headquarters').on('loaded.bs.select', (e) => {
+                axios.get(`${URL}/PDMSucursal/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => {
+                        response.data.map((item, index) => {
+                            let option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal}> ${item.Descripcion} </option>`;
+                            $("#headquarters").append(option)
+                            $("#headquarters").selectpicker('refresh');
+                            $("#headquarters").removeAttr("disabled");
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            });
+            //Change -> Sede
+            $('#headquarters').on('changed.bs.select	', (e) => {
+                let id = e.currentTarget.value ? e.currentTarget.value : "002";
+                let dataImpl = JSON.stringify({
+                    id: id,
+                    estado: 1
+                })
+                axios.get(`${URL}/PDMImplemento/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdSucursal: JSON.parse(dataImpl).id,
+                        Estado: JSON.parse(dataImpl).estado
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        $("#implement").selectpicker('refresh');
+                        let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                        $("#implement").append(option)
+                        $("#implement").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+
+                axios.get(`${URL}/PDMMaquinaria/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdSucursal: JSON.parse(dataImpl).id,
+                        Estado: JSON.parse(dataImpl).estado
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        $("#machinery").selectpicker('refresh');
+                        let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                        $("#machinery").append(option)
+                        $("#machinery").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+
+
+
+            });
+
+            //Change -> Sede
+            $('#implementType').on('changed.bs.select	', (e) => {
+                const id = e.currentTarget.value ? e.currentTarget.value : "002";
+
+                let dataImpl = JSON.stringify({
+                    IdParte: 0,
+                    IdTipoImplemento: id
+                })
+                axios.get(`${URL}/PDMCheckListImplemento/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdParte: JSON.parse(dataImpl).IdParte,
+                        IdTipoImplemento: JSON.parse(dataImpl).IdTipoImplemento
+                    }
+                })
+                .then(response => {
+                    console.log(response.data)
+                    let implemento = response.data[0];
+                    $(`#table-implement`).empty();
+                    $(`#table-implement`).append(`
+                        <thead class="thead-light text-white">
+                            <tr class="d-flex" id="systems-head-th">
+                                <th class="col-1 text-center font-weight-bold">#</th>
+                                <th class="col-5 text-left font-weight-bold">
+                                    ${implemento.Sistema}
+                                </th>
+                                <th class="col-2 text-center font-weight-bold">OK</th>
+                                <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                <th class="col-2 text-center font-weight-bold">N.A.</th>
+                            </tr>
+                        </thead>
+                    `);
+                    
+                    return response;
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        $(`#table-implement`).append(`
+                            <tbody id="systems-body">
+                                <tr class="d-flex system" id="systems-head-tr">
+                                    <td class="col-1 text-center"> ${index + 1} </td>
+                                    <td class="col-5 text-left"> ${item.Componente}</td>
+                                    <td class="col-2 text-center"><input type="radio" checked class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
+                                </tr>
+                            </tbody>
+                        `);
+                    })
+                })
+
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+            //GET -> Controller:Sistema/IndexJSON
+            //Inicializar Sistema
+            axios.get(`${URL}/PDMSistema/IndexJSON`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                response.data.map((item, index) => {
+                    let table = 
+                        `
+                        <table class="table table-hover" id=${item.IdSistema} >
+                            <thead class="thead-light text-white" id="systems-head">
+                                    <tr class="d-flex" id="systems-head-th">
+                                    <th class="col-1 text-center font-weight-bold">#</th>
+                                    <th class="col-5 text-left font-weight-bold">
+                                        ${item.Descripcion}
+                                    </th>
+                                    <th class="col-2 text-center font-weight-bold">OK</th>
+                                    <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                    <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                </tr>
+                            </thead>
+                        </tabler>`;
+                    $("#table-system").append(table);
+                });
+                return response;
+            })
+            .then((response) => {
+                let dataParte = JSON.stringify({
+                    id: 0
+                });
+
+                response.data.map((sistema, index) => {
+                    axios.get(`${URL}/PDMCheckListSistema/Index`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        params: {
+                            IdParte: JSON.parse(dataParte).id,
+                        }
+                    })
+                    .then(response => {
+                        var indice = 1;
+                        response.data.map((parte, index) => {
+                            
+                            if (sistema.IdSistema === parte.IdSistema) {
+
+                                let tbody = `
+                                     <tr class="d-flex implement">
+                                        <td class="col-1 text-center">${indice}</td>
+                                        <td class="col-5 text-left">${parte.Componente}</td>
+                                        <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente}></td>
+                                     </tr>    
+                                `;
+                                $(`#${sistema.IdSistema}`).append(tbody);
+                                indice = indice+1;
+                            }
+                        })
+                    })
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        });
+    </script>
+}
