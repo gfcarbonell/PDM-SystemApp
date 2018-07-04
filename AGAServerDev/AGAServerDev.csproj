@@ -172,6 +172,7 @@
       <DependentUpon>201807031604299_DBContextPDM.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Controllers\PDMOperarioController.cs" />
     <Compile Include="Models\PDM_ACCION.cs" />
     <Compile Include="Models\PDM_CHECKLIST.cs" />
     <Compile Include="Models\PDM_CHECKLIST_IMPLEMENTO.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Models\PDM_IMPLEMENTO.cs" />
     <Compile Include="Models\PDM_MAQUINARIA.cs" />
     <Compile Include="Models\PDM_OBSERVACION.cs" />
+    <Compile Include="Models\PDM_OPERARIO.cs" />
     <Compile Include="Models\PDM_PARTE.cs" />
     <Compile Include="Models\PDM_SISTEMA.cs" />
     <Compile Include="Models\PDM_SUCURSAL.cs" />
@@ -196,6 +198,7 @@
     <Compile Include="Services\IENTIDAD.cs" />
     <Compile Include="Services\IIMPLEMENTO.cs" />
     <Compile Include="Services\IMAQUINARIA.cs" />
+    <Compile Include="Services\IOPERARIO.cs" />
     <Compile Include="Services\ISISTEMA.cs" />
     <Compile Include="Services\ISUCURSAL.cs" />
     <Compile Include="Services\ITIPO_IMPLEMENTO.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="Services\PDM_CHECKLIST_SISTEMA_SERV.cs" />
     <Compile Include="Services\PDM_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_MAQUINARIA_SERV.cs" />
+    <Compile Include="Services\PDM_OPERARIO_SERV.cs" />
     <Compile Include="Services\PDM_SISTEMA_SERV.cs" />
     <Compile Include="Services\PDM_SUCURSAL_SERV.cs" />
     <Compile Include="Services\PDM_TURNO_SERV.cs" />
@@ -482,6 +486,7 @@
     <Folder Include="Views\PDMCheckListSistema\" />
     <Folder Include="Views\PDMImplemento\" />
     <Folder Include="Views\PDMMaquinaria\" />
+    <Folder Include="Views\PDMOperario\" />
     <Folder Include="Views\PDMSucursal\" />
     <Folder Include="Views\PDMTurno\" />
   </ItemGroup>

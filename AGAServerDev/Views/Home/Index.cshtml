@@ -28,9 +28,7 @@
             <div class="form-group col-md-6">
                 <label for="operator">Operarios</label>
                 <select class="form-control selectpicker" data-live-search="true" id="operator" data-size="10" disabled>
-                    <option data-tokens=1 value="1">Operario 1</option>
-                    <option data-tokens=2 value="2">Operario 2</option>
-                    <option data-tokens=3 value="3">Operario 3</option>
+                  
                 </select>
             </div>
             <div class="form-group col-md-6">
@@ -74,12 +72,43 @@
             // Select -> Desarrollo o Producción
             const SERVER_PROD = true;
             const URL = SERVER_PROD ? `http://172.20.4.182` : `http://localhost:54105`;
+
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
             var today = now.getFullYear() + "-" + (month) + "-" + (day);
 
             $('#date').val(today);
+
+            //GET -> Controller:Tipo Implemento/Index
+            //Inicializar Tipo Implemento
+            $('#operator').on('loaded.bs.select', (e) => {
+                let dataOperario = JSON.stringify({
+                    estado: 1
+                })
+
+                axios.get(`${URL}/PDMOperario/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        Estado: JSON.parse(dataOperario).estado,
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option = `<option data-tokens=${item.IdPersonal} value=${item.IdOperador}> ${item.Nombre} </option>`;
+                        $("#operator").append(option)
+                        $("#operator").selectpicker('refresh');
+                        $("#operator").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+
             //GET -> Controller:Tipo Implemento/Index
             //Inicializar Tipo Implemento
             $('#implementType').on('loaded.bs.select', (e) => {
@@ -145,11 +174,13 @@
             });
             //Change -> Sede
             $('#headquarters').on('changed.bs.select	', (e) => {
-                let id = e.currentTarget.value ? e.currentTarget.value : "002";
+                const id = e.currentTarget.value ? e.currentTarget.value : "002";
                 let dataImpl = JSON.stringify({
                     id: id,
                     estado: 1
                 })
+                console.log(id);
+                $(`#implement`).empty();
                 axios.get(`${URL}/PDMImplemento/`, {
                     headers: {
                         'Accept': 'application/json',
@@ -161,6 +192,7 @@
                     }
                 })
                 .then(response => {
+                    $(`#implement`).empty();
                     response.data.map((item, index) => {
                         $("#implement").selectpicker('refresh');
                         let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
@@ -171,8 +203,6 @@
                 .catch(error => {
                     console.log(error);
                 });
-
-
                 axios.get(`${URL}/PDMMaquinaria/`, {
                     headers: {
                         'Accept': 'application/json',
@@ -184,6 +214,7 @@
                     }
                 })
                 .then(response => {
+                    $(`#machinery`).empty();
                     response.data.map((item, index) => {
                         $("#machinery").selectpicker('refresh');
                         let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
@@ -194,9 +225,6 @@
                 .catch(error => {
                     console.log(error);
                 });
-
-
-
             });
 
             //Change -> Sede
@@ -218,7 +246,6 @@
                     }
                 })
                 .then(response => {
-                    console.log(response.data)
                     let implemento = response.data[0];
                     $(`#table-implement`).empty();
                     $(`#table-implement`).append(`
@@ -244,7 +271,7 @@
                                 <tr class="d-flex system" id="systems-head-tr">
                                     <td class="col-1 text-center"> ${index + 1} </td>
                                     <td class="col-5 text-left"> ${item.Componente}</td>
-                                    <td class="col-2 text-center"><input type="radio" checked class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
                                     <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
                                     <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
                                 </tr>
@@ -311,7 +338,7 @@
                                      <tr class="d-flex implement">
                                         <td class="col-1 text-center">${indice}</td>
                                         <td class="col-5 text-left">${parte.Componente}</td>
-                                        <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${parte.IdComponente}></td>
                                         <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente}></td>
                                         <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente}></td>
                                      </tr>    

@@ -43,6 +43,16 @@ namespace AGAServerDev.Services
                         EstadoParameter.SqlDbType = SqlDbType.TinyInt;
                         EstadoParameter.Value = Estado;
 
+                        if (EstadoParameter.Value == null)
+                        {
+                            EstadoParameter.Value = 1;
+                        }
+
+                        if (IdSucursalParameter.Value == null)
+                        {
+                            IdSucursalParameter.Value = "000";
+                        }
+
                         var Implementos = db.Database.SqlQuery<PDM_IMPLEMENTO>("[dbo].[PR_PDM_IMPLEMENTO_QRY] @IdSucursal, @Estado",
                             IdSucursalParameter,
                             EstadoParameter

@@ -35,18 +35,28 @@ namespace AGAServerDev.Services
                         IdSucursalParameter.ParameterName = "@IdSucursal";
                         IdSucursalParameter.Direction = ParameterDirection.Input;
                         IdSucursalParameter.SqlDbType = SqlDbType.VarChar;
-                        string _IdSucursal = (IdSucursal == null) ? "002" : IdSucursal;
-                        IdSucursalParameter.Value = _IdSucursal;
+                        IdSucursalParameter.Value = IdSucursal;
 
                         EstadoParameter.ParameterName = "@Estado";
                         EstadoParameter.Direction = ParameterDirection.Input;
                         EstadoParameter.SqlDbType = SqlDbType.TinyInt;
                         EstadoParameter.Value = Estado;
 
+                        if (EstadoParameter.Value == null)
+                        {
+                            EstadoParameter.Value = 1;
+                        }
+
+                        if(IdSucursalParameter.Value == null)
+                        {
+                            IdSucursalParameter.Value = "000";
+                        }
+
                         var Maquinarias = db.Database.SqlQuery<PDM_MAQUINARIA>("dbo.[PR_PDM_MAQUINARIA_QRY] @IdSucursal, @Estado",
                             IdSucursalParameter,
                             EstadoParameter
-                            ).ToList();
+                        ).ToList();
+
                         ctxTrans.Commit(); // Aprobado
                         return Maquinarias;
                     }
