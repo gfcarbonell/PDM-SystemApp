@@ -1,5 +1,5 @@
 ﻿<div class="container">
-    <form role="form" data-toggle="validator">
+    <form role="form" data-toggle="validator" id="form-list">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="headquarters">Sucursales - Sedes - Fundos</label>
@@ -70,19 +70,17 @@
     <script type="text/javascript">
         $(function () {
             // Select -> Desarrollo o Producción
-            const SERVER_PROD = true;
+            const SERVER_PROD = false;
             const URL = SERVER_PROD ? `http://172.20.4.182` : `http://localhost:54105`;
-
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
             var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
             $('#date').val(today);
 
             //GET -> Controller:Tipo Implemento/Index
-            //Inicializar Tipo Implemento
-            $('#operator').on('loaded.bs.select', (e) => {
+            //Inicializar Operario
+            /*$('#operator').on('loaded.bs.select', (e) => {
                 let dataOperario = JSON.stringify({
                     estado: 1
                 })
@@ -107,8 +105,7 @@
                 .catch(error => {
                     console.log(error);
                 });
-            });
-
+            }); */
             //GET -> Controller:Tipo Implemento/Index
             //Inicializar Tipo Implemento
             $('#implementType').on('loaded.bs.select', (e) => {
@@ -226,7 +223,6 @@
                     console.log(error);
                 });
             });
-
             //Change -> Sede
             $('#implementType').on('changed.bs.select	', (e) => {
                 const id = e.currentTarget.value ? e.currentTarget.value : "002";
@@ -284,8 +280,11 @@
                     console.log(error);
                 });
             });
+
+            
             //GET -> Controller:Sistema/IndexJSON
             //Inicializar Sistema
+           
             axios.get(`${URL}/PDMSistema/IndexJSON`, {
                 headers: {
                     'Accept': 'application/json',
@@ -310,6 +309,9 @@
                             </thead>
                         </tabler>`;
                     $("#table-system").append(table);
+
+                    //Observation
+                    $("#table-system").append(`<div class="form-row col-md-12" id="observation-${item.IdSistema}"/>`);
                 });
                 return response;
             })
@@ -317,7 +319,8 @@
                 let dataParte = JSON.stringify({
                     id: 0
                 });
-
+                
+                //Add Component -> System
                 response.data.map((sistema, index) => {
                     axios.get(`${URL}/PDMCheckListSistema/Index`, {
                         headers: {
@@ -331,29 +334,136 @@
                     .then(response => {
                         var indice = 1;
                         response.data.map((parte, index) => {
-                            
-                            if (sistema.IdSistema === parte.IdSistema) {
 
+                            if (sistema.IdSistema === parte.IdSistema) {
+                                //Add Componente -> Table Sistema
                                 let tbody = `
-                                     <tr class="d-flex implement">
-                                        <td class="col-1 text-center">${indice}</td>
-                                        <td class="col-5 text-left">${parte.Componente}</td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${parte.IdComponente}></td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente}></td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente}></td>
-                                     </tr>    
+                                    
+                                         <tr class="d-flex implement">
+                                            <td class="col-1 text-center">${indice}</td>
+                                            <td class="col-5 text-left">${parte.Componente}</td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${parte.IdComponente}></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
+                                         </tr>
+                                    
                                 `;
                                 $(`#${sistema.IdSistema}`).append(tbody);
-                                indice = indice+1;
+                                indice = indice + 1;
                             }
-                        })
+                        });
+                        return response; 
+                     })
+                    .then(response => {
+                        let children = [];
+                        response.data.map((parte, index) => {
+                            if (sistema.IdSistema === parte.IdSistema) {
+                                $(`input[name=${parte.IdComponente}]`).change(() => {
+                                    var check = $(`input[name=${parte.IdComponente}]:checked`).val();
+                                    if (check == 1) {
+                                        let length = $(`#observation-${parte.IdSistema}`).children().length;
+                                        if (length == 0) {
+
+                                            let observation =
+                                                `
+                                                <div class="form-group col-md-6">
+                                                    <label for="implementType">Tipos de implemento</label>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="implement">Implementos</label>
+                                                </div>
+                                                `;
+
+                                            $(`#observation-${parte.IdSistema}`).append(observation);
+                                        } 
+                                        children[index] = true;
+                                    }
+                                    else if (check == 0 || check  == 2) {
+                                        children[index] = false;
+                                    }
+                                    if (children.every(element => element == false)) {
+                                        $(`#observation-${parte.IdSistema}`).empty();
+                                    }
+                                });   
+                            }
+                        });
                     })
                 })
-            })
+
+             })
             .catch(error => {
                 console.log(error);
             });
 
+
+            $(`#form-list`).submit((event) => {
+                event.preventDefault();
+                let data = [];
+                //Here 
+                axios.get(`${URL}/PDMSistema/IndexJSON`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    return response;
+                })
+                .then((response) => {
+                    let dataParte = JSON.stringify({
+                        id: 0
+                    });
+                    //Add Component -> System
+                    response.data.map((sistema, index) => {
+                        axios.get(`${URL}/PDMCheckListSistema/Index`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            params: {
+                                IdParte: JSON.parse(dataParte).id,
+                            }
+                        })
+                            .then(response => {
+                                response.data.map((parte, index) => {
+                                    if (sistema.IdSistema === parte.IdSistema) {
+                                        var check = $(`input[name=${parte.IdComponente}]:checked`).val(); 
+          
+                                        data.push({ IdSistema: parte.IdSistema, IdComponente:parte.IdComponente, Estado:1, Situacion:check });
+                                    }
+                                })
+                            })
+
+                    })
+
+
+                    let dailyPart = {
+                        HeadquartersId: $("#headquarters").val(),
+                        MachineryId: $("#machinery").val(),
+                        ImplementTypeId: $("#implementType").val(),
+                        ImplementId: $("#implement").val(),
+                        OperatorId: $("#operator").val() | "80016056",
+                        Date: $("#date").val(),
+                        TurnId: $("#turn").val(),
+                        CreationDate: new Date().toLocaleString(),
+                        UserCreation: "1",
+                        ModificationDate: new Date().toLocaleString(),
+                        UserModification: "1",
+
+                    }
+
+                    console.log(dailyPart);
+
+                    console.log(data);
+
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            })
+            
+                
+           
         });
     </script>
 }
