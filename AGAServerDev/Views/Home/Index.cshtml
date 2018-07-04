@@ -311,7 +311,7 @@
                     $("#table-system").append(table);
 
                     //Observation
-                    $("#table-system").append(`<div class="form-group col-md-12" id="observation-${item.IdSistema}"/>`);
+                    $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);
                 });
                 return response;
             })
@@ -366,20 +366,23 @@
 
                                             let observation =
                                                 `
-                                                <div class="">
-                                                      <label for="Observation">Observaciones:</label>
-                                                      <textarea class="form-control" rows="3" id="Observation"></textarea>
-                                                </div>
-                                                <div class="">
-                                                    <label for="actions">Acciones</label> <input type="checkbox" checked data-toggle="toggle">
-                                                    <select class="form-control selectpicker" data-live-search="true" id="actions" name="actions" required>
-                                                        <option data-tokens="000" value="000">---</option>
-                                                        <option data-tokens="000" value="000">---</option>
-                                                        <option data-tokens="000" value="000">---</option>
-                                                        <option data-tokens="000" value="000">---</option>
-                                                    </select>
-                                                </div>
-                                              
+                                                
+                                                    <div class=" col-md-8">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <label for="Observation">Observaciones:</label>  <label for="apply"> Aplica? <input id="apply" type="checkbox" data-toggle="toggle"/>  </label> 
+                                                        </div>
+                                                        <textarea class="form-control" rows="1" id="Observation"></textarea>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="actions">Acciones</label> 
+                                                        <select class="form-control selectpicker" data-live-search="true" id="actions" name="actions" required>
+                                                            <option data-tokens="000" value="000">---</option>
+                                                            <option data-tokens="000" value="000">---</option>
+                                                            <option data-tokens="000" value="000">---</option>
+                                                            <option data-tokens="000" value="000">---</option>
+                                                        </select>
+                                                    </div>
+                                               
                                                 `;
 
                                             $(`#observation-${parte.IdSistema}`).append(observation);
