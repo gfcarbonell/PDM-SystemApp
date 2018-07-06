@@ -164,6 +164,7 @@
     <Compile Include="Controllers\PDMAccionController.cs" />
     <Compile Include="Controllers\PDMImplementoController.cs" />
     <Compile Include="Controllers\PDMMaquinariaController.cs" />
+    <Compile Include="Controllers\PDMParteDiarioController.cs" />
     <Compile Include="Controllers\PDMSistemaController.cs" />
     <Compile Include="Controllers\PDMSucursalController.cs" />
     <Compile Include="Controllers\PDMTipoImplementoController.cs" />
@@ -494,6 +495,7 @@
     <Folder Include="Views\PDMImplemento\" />
     <Folder Include="Views\PDMMaquinaria\" />
     <Folder Include="Views\PDMOperario\" />
+    <Folder Include="Views\PDMParteDiario\" />
     <Folder Include="Views\PDMSucursal\" />
     <Folder Include="Views\PDMTurno\" />
   </ItemGroup>
