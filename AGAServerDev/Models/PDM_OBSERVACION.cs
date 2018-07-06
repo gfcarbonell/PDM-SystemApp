@@ -14,6 +14,10 @@ namespace AGAServerDev.Contexts
         public int IdParte { get; set; }
 
         [Required]
+        [StringLength(2)]
+        public string IdSistema { get; set; }
+
+        [Required]
         [StringLength(150)]
         public string Observacion { get; set; }
 
@@ -28,5 +32,7 @@ namespace AGAServerDev.Contexts
         public virtual PDM_ACCION PDM_ACCION { get; set; }
 
         public virtual PDM_PARTE PDM_PARTE { get; set; }
+
+        public virtual PDM_SISTEMA PDM_SISTEMA { get; set; }
     }
 }

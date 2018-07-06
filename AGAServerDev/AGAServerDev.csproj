@@ -161,6 +161,7 @@
     <Compile Include="Contexts\DBContextPDM.cs" />
     <Compile Include="Controllers\PDMCheckListImplementoController.cs" />
     <Compile Include="Controllers\PDMCheckListSistemaController.cs" />
+    <Compile Include="Controllers\PDMAccionController.cs" />
     <Compile Include="Controllers\PDMImplementoController.cs" />
     <Compile Include="Controllers\PDMMaquinariaController.cs" />
     <Compile Include="Controllers\PDMSistemaController.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\PDM_OBSERVACION.cs" />
     <Compile Include="Models\PDM_OPERARIO.cs" />
     <Compile Include="Models\PDM_PARTE.cs" />
+    <Compile Include="Models\PDM_PARTE_DIARIO.cs" />
     <Compile Include="Models\PDM_SISTEMA.cs" />
     <Compile Include="Models\PDM_SUCURSAL.cs" />
     <Compile Include="Models\PDM_TIPO_IMPLEMENTO.cs" />
@@ -193,21 +195,25 @@
     </Compile>
     <Compile Include="Models\PDM_TURNO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IACCION.cs" />
     <Compile Include="Services\ICHECKLIST_IMPLEMENTO.cs" />
     <Compile Include="Services\ICHECKLIST_SISTEMA.cs" />
     <Compile Include="Services\IENTIDAD.cs" />
     <Compile Include="Services\IIMPLEMENTO.cs" />
     <Compile Include="Services\IMAQUINARIA.cs" />
     <Compile Include="Services\IOPERARIO.cs" />
+    <Compile Include="Services\IPARTE_DIARIO.cs" />
     <Compile Include="Services\ISISTEMA.cs" />
     <Compile Include="Services\ISUCURSAL.cs" />
     <Compile Include="Services\ITIPO_IMPLEMENTO.cs" />
     <Compile Include="Services\ITURNO.cs" />
+    <Compile Include="Services\PDM_ACCION_SERV.cs" />
     <Compile Include="Services\PDM_CHECKLIST_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_CHECKLIST_SISTEMA_SERV.cs" />
     <Compile Include="Services\PDM_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_MAQUINARIA_SERV.cs" />
     <Compile Include="Services\PDM_OPERARIO_SERV.cs" />
+    <Compile Include="Services\PDM_PARTE_DIARIO_SERV.cs" />
     <Compile Include="Services\PDM_SISTEMA_SERV.cs" />
     <Compile Include="Services\PDM_SUCURSAL_SERV.cs" />
     <Compile Include="Services\PDM_TURNO_SERV.cs" />
@@ -482,6 +488,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\PDMAccion\" />
     <Folder Include="Views\PDMCheckListImplemento\" />
     <Folder Include="Views\PDMCheckListSistema\" />
     <Folder Include="Views\PDMImplemento\" />

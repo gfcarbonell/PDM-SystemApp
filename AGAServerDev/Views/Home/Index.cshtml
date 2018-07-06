@@ -40,7 +40,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input class="form-control" type="date" id="date" name="date" />
+                <input class="form-control" type="date" id="date" name="date" disabled/>
             </div>
         </div>
 
@@ -56,9 +56,10 @@
             <div>
                 <h5>Implementos - Componentes</h5>
             </div>
-            <table class="table table-hover" id="table-implement">
-               
-            </table>
+            <div class="form-row table-responsive" id="table-implement">
+
+            </div>
+            
         </div>
         <div class="form-row justify-content-center">
             <button type="submit" id="send-check-list" class="btn btn-success">Terminar diagnóstico</button>
@@ -70,7 +71,7 @@
     <script type="text/javascript">
         $(function () {
             // Select -> Desarrollo o Producción
-            const SERVER_PROD = false;
+            const SERVER_PROD = true;
             const URL = SERVER_PROD ? `http://172.20.4.182` : `http://localhost:54105`;
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
@@ -80,8 +81,9 @@
 
             //GET -> Controller:Tipo Implemento/Index
             //Inicializar Operario
-            /*$('#operator').on('loaded.bs.select', (e) => {
-                let dataOperario = JSON.stringify({
+            /*
+            $('#operator').on('loaded.bs.select', (e) => {
+                const dataOperario = JSON.stringify({
                     estado: 1
                 })
 
@@ -226,7 +228,6 @@
             //Change -> Sede
             $('#implementType').on('changed.bs.select	', (e) => {
                 const id = e.currentTarget.value ? e.currentTarget.value : "002";
-
                 let dataImpl = JSON.stringify({
                     IdParte: 0,
                     IdTipoImplemento: id
@@ -244,47 +245,92 @@
                 .then(response => {
                     let implemento = response.data[0];
                     $(`#table-implement`).empty();
-                    $(`#table-implement`).append(`
-                        <thead class="thead-light text-white">
-                            <tr class="d-flex" id="systems-head-th">
-                                <th class="col-1 text-center font-weight-bold">#</th>
-                                <th class="col-5 text-left font-weight-bold">
-                                    ${implemento.Sistema}
-                                </th>
-                                <th class="col-2 text-center font-weight-bold">OK</th>
-                                <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                <th class="col-2 text-center font-weight-bold">N.A.</th>
-                            </tr>
-                        </thead>
-                    `);
-                    
+                    let table =
+                        `
+                        <table class="table table-hover" id=${implemento.IdSistema} >
+                            <thead class="thead-light text-white" id="systems-head">
+                                    <tr class="d-flex" id="systems-head-th">
+                                    <th class="col-1 text-center font-weight-bold">#</th>
+                                    <th class="col-5 text-left font-weight-bold">
+                                        ${implemento.Sistema}
+                                    </th>
+                                    <th class="col-2 text-center font-weight-bold">OK</th>
+                                    <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                    <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                </tr>
+                            </thead>
+                        </table>`;
+                    $("#table-implement").append(table); 
+                    //Observation
+                    $("#table-implement").append(`<div class="table  d-flex justify-content-between" id="observation-${implemento.IdSistema}"/>`);
                     return response;
                 })
                 .then(response => {
+                    let implemento = response.data[0];
                     response.data.map((item, index) => {
-                        $(`#table-implement`).append(`
+                        $(`#${implemento.IdSistema}`).append(`
                             <tbody id="systems-body">
                                 <tr class="d-flex system" id="systems-head-tr">
                                     <td class="col-1 text-center"> ${index + 1} </td>
                                     <td class="col-5 text-left"> ${item.Componente}</td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=${item.IdComponente} name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente}></td>
+                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente}></td>
                                 </tr>
                             </tbody>
                         `);
                     })
+                    return response;
                 })
+                .then(response => {
+                    let children = [];
+                    response.data.map((parte, index) => {
+                        $(`input[name=${parte.IdComponente}]`).change(() => {
+                            var check = $(`input[name=${parte.IdComponente}]:checked`).val();
+                            if (check == 1) {
+                                let length = $(`#observation-${parte.IdSistema}`).children().length;
+                                if (length == 0) {
+                                    let observation =
+                                        `
+                                            <div class=" col-md-8">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <label for="observation-system-${parte.IdSistema}">Observaciones:</label>  
+                                                </div>
+                                                <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="actions">Acciones</label> 
+                                                <select class="form-control selectpicker actionsSystem" id="actionsSystem" data-live-search="true" required>
+                                                   
+                                                </select>
+                                            </div>
+                                        `;
 
+                                    $(`#observation-${parte.IdSistema}`).append(observation);
+                                    $(".actionsSystem").selectpicker('refresh');
+                                }
+                                children[index] = true;
+                            }
+                            else if (check == 0 || check == 2) {
+                                children[index] = false;
+                            }
+                            if (children.every(element => element == false)) {
+                                $(`#observation-${parte.IdSistema}`).empty();
+                            }
+                        });
+                    });
+                    return response;
+                })
                 .catch(error => {
                     console.log(error);
                 });
             });
 
             
+        
+
             //GET -> Controller:Sistema/IndexJSON
             //Inicializar Sistema
-           
             axios.get(`${URL}/PDMSistema/IndexJSON`, {
                 headers: {
                     'Accept': 'application/json',
@@ -307,9 +353,8 @@
                                     <th class="col-2 text-center font-weight-bold">N.A.</th>
                                 </tr>
                             </thead>
-                        </tabler>`;
+                        </table>`;
                     $("#table-system").append(table);
-
                     //Observation
                     $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);
                 });
@@ -319,7 +364,6 @@
                 let dataParte = JSON.stringify({
                     id: 0
                 });
-                
                 //Add Component -> System
                 response.data.map((sistema, index) => {
                     axios.get(`${URL}/PDMCheckListSistema/Index`, {
@@ -338,15 +382,13 @@
                             if (sistema.IdSistema === parte.IdSistema) {
                                 //Add Componente -> Table Sistema
                                 let tbody = `
-                                    
-                                         <tr class="d-flex implement">
-                                            <td class="col-1 text-center">${indice}</td>
-                                            <td class="col-5 text-left">${parte.Componente}</td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${parte.IdComponente}></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
-                                         </tr>
-                                    
+                                    <tr class="d-flex implement">
+                                        <td class="col-1 text-center">${indice}</td>
+                                        <td class="col-5 text-left">${parte.Componente}</td>
+                                        <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
+                                    </tr>
                                 `;
                                 $(`#${sistema.IdSistema}`).append(tbody);
                                 indice = indice + 1;
@@ -363,30 +405,44 @@
                                     if (check == 1) {
                                         let length = $(`#observation-${parte.IdSistema}`).children().length;
                                         if (length == 0) {
-
+                                            //TextArea Observaciones - Aplica - Acciones 
                                             let observation =
                                                 `
-                                                
                                                     <div class=" col-md-8">
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="Observation">Observaciones:</label>  <label for="apply"> Aplica? <input id="apply" type="checkbox" data-toggle="toggle"/>  </label> 
+                                                            <label for="observation-system-${parte.IdSistema}">Observaciones:</label>  
                                                         </div>
-                                                        <textarea class="form-control" rows="1" id="Observation"></textarea>
+                                                        <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <label for="actions">Acciones</label> 
-                                                        <select class="form-control selectpicker" data-live-search="true" id="actions" name="actions" required>
-                                                            <option data-tokens="000" value="000">---</option>
-                                                            <option data-tokens="000" value="000">---</option>
-                                                            <option data-tokens="000" value="000">---</option>
-                                                            <option data-tokens="000" value="000">---</option>
-                                                        </select>
+                                                    <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                        <label for="action-${parte.IdSistema}">Acciones</label> 
+                                                       
                                                     </div>
-                                               
                                                 `;
-
                                             $(`#observation-${parte.IdSistema}`).append(observation);
-                                            $("#actions").selectpicker('refresh');
+
+                                            let select;
+                                            if ($(`#action-${parte.IdSistema}`).children() > 0) {
+                                                
+                                            }
+                                            else {
+                                                axios.get(`${URL}/PDMAccion/`, {
+                                                    headers: {
+                                                        'Accept': 'application/json',
+                                                        'Content-Type': 'application/json',
+                                                    }
+                                                }).then(response => {
+                                                    let select = `<select class="form-control selectpicker actionsSystem" id="action-${parte.IdSistema}" data-live-search="true">`;
+                                                    response.data.map((item, index) => {
+                                                        let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                        select =  select + option;
+                                                    })
+                                                    select = select + (`</select>`);
+                                                    $(`#container-action-${parte.IdSistema}`).append(select)
+                                                    $(`#action-${parte.IdSistema}`).selectpicker('refresh');
+                                                })
+                                            }
+ 
                                         } 
                                         children[index] = true;
                                     }
@@ -400,18 +456,28 @@
                             }
                         });
                     })
+                    
                 })
+            })
 
-             })
             .catch(error => {
                 console.log(error);
             });
 
-
+           
+            //Submit
             $(`#form-list`).submit((event) => {
                 event.preventDefault();
-                let data = [];
-                //Here 
+                let checkListData = [];
+                let observationsData = [];
+
+                //Get values - Observations
+                $('.observations').each(function () {
+                    let id = this.id.split("-").pop();
+                    observationsData.push({ IdSistema: id, IdObservacion:0, Observaciones: this.value })
+                });
+
+               //Get values - Sistemas
                 axios.get(`${URL}/PDMSistema/IndexJSON`, {
                     headers: {
                         'Accept': 'application/json',
@@ -423,9 +489,10 @@
                 })
                 .then((response) => {
                     let dataParte = JSON.stringify({
-                        id: 0
+                        IdParte: 0,
+                        IdTipoImplemento: $("#implementType").val()
                     });
-                    //Add Component -> System
+
                     response.data.map((sistema, index) => {
                         axios.get(`${URL}/PDMCheckListSistema/Index`, {
                             headers: {
@@ -433,49 +500,54 @@
                                 'Content-Type': 'application/json',
                             },
                             params: {
-                                IdParte: JSON.parse(dataParte).id,
+                                IdParte: JSON.parse(dataParte).IdParte,
                             }
                         })
-                            .then(response => {
-                                response.data.map((parte, index) => {
-                                    if (sistema.IdSistema === parte.IdSistema) {
-                                        var check = $(`input[name=${parte.IdComponente}]:checked`).val(); 
-          
-                                        data.push({ IdSistema: parte.IdSistema, IdComponente:parte.IdComponente, Estado:1, Situacion:check });
-                                    }
-                                })
+                        .then(response => {
+                            response.data.map((parte, index) => {
+                                if (sistema.IdSistema === parte.IdSistema) {
+                                    var check = $(`input[name=${parte.IdComponente}]:checked`).val(); 
+                                    checkListData.push({ IdSistema: parte.IdSistema, IdComponente:parte.IdComponente, Estado:1, Situacion:check });
+                                }
                             })
-
+                        })
                     })
 
+                    //Get values - Implemento
+                    axios.get(`${URL}/PDMCheckListImplemento/`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        params: {
+                            IdParte: JSON.parse(dataParte).IdParte,
+                            IdTipoImplemento: JSON.parse(dataParte).IdTipoImplemento
+                        }
+                    })
+                    .then(response => {
+                        response.data.map((parte, index) => {
+                            var check = $(`input[name=${parte.IdComponente}]:checked`).val();
+                            checkListData.push({ IdSistema: parte.IdSistema, IdComponente: parte.IdComponente, Estado: 1, Situacion: check });
+                        })
+                    })
 
-                    let dailyPart = {
-                        HeadquartersId: $("#headquarters").val(),
-                        MachineryId: $("#machinery").val(),
-                        ImplementTypeId: $("#implementType").val(),
-                        ImplementId: $("#implement").val(),
-                        OperatorId: $("#operator").val() | "80016056",
-                        Date: $("#date").val(),
-                        TurnId: $("#turn").val(),
-                        CreationDate: new Date().toLocaleString(),
-                        UserCreation: "1",
-                        ModificationDate: new Date().toLocaleString(),
-                        UserModification: "1",
-
-                    }
-
-                    console.log(dailyPart);
-
-                    console.log(data);
-
+                    console.log({
+                        IdSucursal: $("#headquarters").val(),
+                        IdMaquinaria: $("#machinery").val(),
+                        IdTipoImplemento: $("#implementType").val(),
+                        IdImplemento: $("#implement").val(),
+                        IdOperario: $("#operator").val() | "80016056",
+                        IdTurno: $("#turn").val(),
+                        UsuarioCreacion: 1,
+                        TablaCheckList: checkListData,
+                        TablaObservacion: observationsData ? observationsData : []
+                    });
                 })
                 .catch(error => {
                     console.log(error);
                 });
             })
-            
-                
-           
+
         });
     </script>
 }
