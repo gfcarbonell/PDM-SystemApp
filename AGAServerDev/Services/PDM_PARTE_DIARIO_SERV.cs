@@ -26,6 +26,110 @@ namespace AGAServerDev.Services
         {
             throw new NotImplementedException();
         }
+
+        public PDM_PARTE_DIARIO GetParteById(int IdParte)
+        {
+            using (DBContextPDM db = new DBContextPDM())
+            {
+                using (var ctxTrans = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var IdParteDiarioParameter = new SqlParameter();
+
+                        IdParteDiarioParameter.ParameterName = "@IdParte";
+                        IdParteDiarioParameter.Direction = ParameterDirection.Input;
+                        IdParteDiarioParameter.SqlDbType = SqlDbType.SmallInt;
+                        IdParteDiarioParameter.Value = IdParte;
+
+                        var parteDiario = db.Database.SqlQuery<PDM_PARTE_DIARIO>("dbo.[PR_PDM_PARTE_SEL] @IdParte",
+                            IdParteDiarioParameter).FirstOrDefault();
+
+                        ctxTrans.Commit(); // OK
+                        return parteDiario;
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (SqlException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        public ICollection<PDM_PARTE_EXT> Get(DateTime Fecha, int IdUsuario)
+        {
+            using (DBContextPDM db = new DBContextPDM())
+            {
+                using (var ctxTrans = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var FechaParameter = new SqlParameter();
+                        var IdUsuarioParameter = new SqlParameter();
+
+
+                        FechaParameter.ParameterName = "@Fecha";
+                        FechaParameter.Direction = ParameterDirection.Input;
+                        FechaParameter.SqlDbType = SqlDbType.Date;
+                        FechaParameter.Value = Fecha;
+
+                        IdUsuarioParameter.ParameterName = "@IdUsuario";
+                        IdUsuarioParameter.Direction = ParameterDirection.Input;
+                        IdUsuarioParameter.SqlDbType = SqlDbType.SmallInt;
+                        IdUsuarioParameter.Value = IdUsuario;
+
+                        var parteDiarios = db.Database.SqlQuery<PDM_PARTE_EXT>("dbo.[PR_PDM_PARTE_QRY_Diario] @Fecha", 
+                            FechaParameter)
+                            .Select(t => new PDM_PARTE_EXT
+                            {
+                                IdParte = t.IdParte,
+                                Fecha = t.Fecha,
+                                IdSucursal = t.IdSucursal,
+                                IdImplemento = t.IdImplemento,
+                                IdTipoImplemento = t.IdTipoImplemento,
+                                IdMaquinaria = t.IdMaquinaria,
+                                IdOperario = t.IdOperario, 
+                               
+                                IdEstado = t.IdEstado,
+                                IdTurno = t.IdTurno
+                            }).ToList();
+
+                        ctxTrans.Commit(); // OK
+                        return parteDiarios;
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (SqlException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+                }
+            }
+        }
         public void Save(PDM_PARTE_DIARIO entidad)
         {
             throw new NotImplementedException();

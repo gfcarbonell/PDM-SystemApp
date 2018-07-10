@@ -18,11 +18,18 @@ namespace AGAServerDev.Controllers
         )
         {
             PDM_PARTE_DIARIO_SERV serv = new PDM_PARTE_DIARIO_SERV();
-            var x = serv.SaveOK(PDM_PARTE_DIARIO);
+            var obj = serv.SaveOK(PDM_PARTE_DIARIO);
            
-            return Json(x, JsonRequestBehavior.AllowGet);
+            return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
-        
+        [HttpGet]
+        public JsonResult Todos (DateTime Fecha, int IdUsuario)
+        {
+            PDM_PARTE_DIARIO_SERV serv = new PDM_PARTE_DIARIO_SERV();
+            var objs = serv.Get(Fecha, IdUsuario);
+            return Json(objs, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -12,5 +12,7 @@ namespace AGAServerDev.Models
         public string Nombre { get; set; }
         public Decimal Estado { get; set; }
         public Decimal Maquinaria { get; set; }
+
+        public virtual PDM_PARTE_EXT PDM_PARTE_EXT { get; set; }
     }
 }

@@ -1,0 +1,63 @@
+﻿<div class="col-md-12 d-md-flex flex-items-center flex-column">
+    <div class="text-gray mx-auto col-sm-8 col-md-6 col-lg-4">
+        <h3 class="text-center">
+            Iniciar Sesión
+        </h3>
+    </div>
+    <div class="text-gray mx-auto col-sm-8 col-md-6  col-lg-4">
+        <form role="form" data-toggle="validator" id="form-login">
+            <div class="form-row ">
+                <div class="form-group col-md-12">
+                    <label for="headquarters">Nombre de usuario:</label>
+                    <input class="form-control" id="username" name="username" placeholder="Escribir su nombre de usuario" required/>
+                    <p class="text-danger text-right" id="error-username"></p>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="headquarters">Password:</label>
+                    <input class="form-control" id="password" name="password" type="password" required/>
+                    <p class="text-danger text-right" id="error-password"></p>
+                </div>
+            </div>
+            <div class="form-row ">
+                <div class="form-group d-flex justify-content-end col-md-12">
+                    <button type="submit" id="send-check-list" class="btn btn-success btn-block">Ingresar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(() => {
+            $(`#form-login`).submit((event) => {
+                event.preventDefault();
+                const mod = "A00";
+                let auth_user = JSON.stringify({
+                    Usuario: $(`#username`).val(),
+                    Contrasenia: $(`#password`).val(),
+                    CodModulo: mod
+                });
+
+                axios.post(`${URL}/AuthUser/Login`, auth_user, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => {
+                    let data = response.data;
+
+                    console.log(data);
+                    axios.post(`${URL}/AuthUser/Permisos`, { auth_user: response.data}, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(response => {
+                        console.log(response.data)
+                    })
+                })
+            })
+        })
+    </script>
+}

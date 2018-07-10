@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "CheckList";
+}
+<div class="margin-bottom-lg">
+    <h2 class="text-center ">Registro(s) de CheckList del dia </h2>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover " id="check-lists">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">#</th>
+                <th scope="col" class="text-center">Sucursal</th>
+                <th scope="col" class="text-center">Maquinaria</th>
+                <th scope="col" class="text-center">Tipo Implemento</th>
+                <th scope="col" class="text-center">Implemento</th>
+                <th scope="col" class="text-center">Operario</th>
+                <th scope="col" class="text-center">Turno</th>
+                <th scope="col" class="text-center">Fecha</th>
+                <th scope="col" class="text-center">Editar</th>
+            </tr>
+        </thead>
+        <tbody id="tbody-daily">
+           
+        </tbody>
+    </table>
+</div>
+@section scripts {
+
+    <script type="text/javascript">
+        $(() => {
+            /// Get Date now
+            var now = new Date();
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+            let data = JSON.stringify({
+                Fecha: today, 
+                IdUsuario: 1
+            });
+
+            //Get Part Daily
+            axios.get(`${URL}/PDMParteDiario/Todos`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                params: {
+                    Fecha: JSON.parse(data).Fecha,
+                    IdUsuario: JSON.parse(data).IdUsuario
+                }
+            })
+           .then(response => {
+               if (response.data) {
+                   response.data.map((item, index) => {
+                       var jsonDate = item.Fecha;  // returns "/Date(1245398693390)/"; 
+                       var re = /-?\d+/;
+                       var m = re.exec(jsonDate);
+                       var d = new Date(parseInt(m[0]));
+
+                       var day = ("0" + d.getDate()).slice(-2);
+                       var month = ("0" + (d.getMonth() + 1)).slice(-2);
+                       var today = (day) + "-" + (month) + "-" + d.getFullYear(); // Format dd/mm/yyyy
+
+                       console.log(today);
+                       let tr = `
+                         <tr>
+                            <td class="text-center" scope="row">${index + 1}</th>
+                            <td class="text-center">${item.IdSucursal}</td>
+                            <td class="text-center">${item.IdMaquinaria}</td>
+                            <td class="text-center">${item.IdTipoImplemento}</td>
+                            <td class="text-center">${item.IdImplemento}</td>
+                            <td class="text-center">${item.IdOperario}</td>
+                            <td class="text-center">${item.IdTurno}</td>
+                            <td class="text-center">${today}</td>
+                            <td class="text-center">
+                                <a href="/PDMHome/CheckListEditar/${item.IdParte}"> Actualizar </a>
+                            </td>
+                        </tr>
+                        `
+                       $(`#tbody-daily`).append(tr);
+                   })
+               }
+  
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        })
+    </script>
+}
+

@@ -1,0 +1,312 @@
+﻿
+<div class="container">
+    <form role="form" data-toggle="validator" id="form-list">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="headquarters">Sucursales - Sedes - Fundos</label>
+                <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters"required>
+                    <option data-tokens="000" value="000">---</option>
+                </select>
+                <p class="text-danger" id="error-headquarters"></p>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="machinery">Maquinarias</label>
+                <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="10" disabled required></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="implementType">Tipos de implemento</label>
+                <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="10" disabled required>
+                    <option data-tokens="000" value="000">---</option>
+                </select>
+                <p class="text-danger" id="error-implementType"></p>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="implement">Implementos</label>
+                <select class="form-control selectpicker" data-live-search="true" id="implement" data-size="10" disabled required></select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="operator">Operarios</label>
+                <select class="form-control selectpicker" data-live-search="true" id="operator" data-size="10" disabled required></select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="turn">Turno</label>
+                <select class="form-control selectpicker" data-live-search="true" id="turn" disabled required></select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="date">Fecha</label>
+                <input class="form-control" type="date" id="date" name="date" disabled required />
+            </div>
+        </div>
+
+        <div>
+            <div>
+                <h5>Sistemas - Componentes</h5>
+            </div>
+            <div class="form-row table-responsive" id="table-system">
+
+            </div>
+        </div>
+        <div class="form-row table-responsive">
+            <div>
+                <h5>Implementos - Componentes</h5>
+            </div>
+            <div class="form-row table-responsive" id="table-implement">
+
+            </div>
+
+        </div>
+        <div class="form-row justify-content-center">
+            <button type="submit" id="send-check-list" class="btn btn-success">
+                Terminar diagnóstico
+            </button>
+        </div>
+    </form>
+</div>
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(() => {
+            //GET -> Controller:Sede/Index
+            //Inicializars Sede
+           
+            var IdSucursalDefault = "@ViewData["IdSucursal"]";
+            var IdImplementoDefault = "@ViewData["IdImplemento"]";
+            var IdMaquinariaDefault = "@ViewData["IdMaquinaria"]";
+            var FechaDefault = "@ViewData["Fecha"]";
+            var IdTurnoDefault = "@ViewData["IdTurno"]";
+            var checkList = "@ViewData["PDM_CHECKLIST"]";
+            console.log(IdTurnoDefault);
+
+            console.log(checkList);
+
+            var now = new Date(FechaDefault);
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+            $(`#date`).val(today);
+
+            //GET -> Controller:PDMTurno/Index
+            //Inicializar Turno
+            $('#turn').on('loaded.bs.select', (e) => {
+                axios.get(`${URL}/PDMTurno/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option;
+                        if (IdTurnoDefault === item.IdTurno) {
+                            option = `<option data-tokens=${item.IdTurno} value=${item.IdTurno} selected> ${item.Descripcion} </option>`;
+                        } else {
+                            option = `<option data-tokens=${item.IdTurno} value=${item.IdTurno}> ${item.Descripcion} </option>`;
+                        }
+                        
+                        $("#turn").append(option)
+                        $("#turn").selectpicker('refresh');
+                        $("#turn").removeAttr("disabled");
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+
+
+            $('#headquarters').on('loaded.bs.select', (e) => {
+                axios.get(`${URL}/PDMSucursal/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option;
+                        if (IdSucursalDefault === item.IdSucursal) {
+                            option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal} selected> ${item.Descripcion} </option>`;
+                        }
+                        else {
+                            option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal}> ${item.Descripcion} </option>`;
+                        }
+                       
+                        $("#headquarters").append(option)
+                        $("#headquarters").selectpicker('refresh');
+                        $("#headquarters").removeAttr("disabled");
+                    });
+
+                    let data = {
+                        IdImplemento: IdImplementoDefault,
+                        IdSucursal: IdSucursalDefault,
+                        IdMaquinaria: IdMaquinariaDefault,
+                    }
+                    return data;
+                 })
+                .then(data => {
+                    let dataImpl = JSON.stringify({
+                        IdSucursal: data.IdSucursal,
+                        Estado: 1
+                    })
+     
+                    //Implement for headquarters
+                    axios.get(`${URL}/PDMImplemento/`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        params: {
+                            IdSucursal: JSON.parse(dataImpl).IdSucursal,
+                            Estado: JSON.parse(dataImpl).Estado
+                        }
+                    })
+                    .then(response => {
+                        $(`#implement`).empty();
+                        if (response.data.length > 0) {
+                            response.data.map((item, index) => {
+                                let option;
+                                if (data.IdImplemento === item.IdImplemento) {
+                                    option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor} selected> ${item.Descripcion}</option>`;
+                                }
+                                else {
+                                    option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                }
+                                $("#implement").selectpicker('refresh');
+                                $("#implement").append(option)
+                                $("#implement").removeAttr("disabled");
+                            });
+                        }
+                        else {
+                            $("#implement").prop('disabled', true);
+                            $(`#implement`).selectpicker('refresh');
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+
+
+                    //Machinery for headquarters
+                    axios.get(`${URL}/PDMMaquinaria/`, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        params: {
+                            IdSucursal: JSON.parse(dataImpl).IdSucursal,
+                            Estado: JSON.parse(dataImpl).Estado
+                        }
+                    })
+                    .then(response => {
+                        $(`#machinery`).empty();
+                        if (response.data.length > 0) {
+                            response.data.map((item, index) => {
+                                let option;
+                                if (data.IdMaquinaria === item.IdMaquinaria) {
+                                    option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor} selected> ${item.Descripcion}</option>`;
+                                } else {
+                                    option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                }
+                                $(`#machinery`).selectpicker('refresh');
+                                $(`#machinery`).append(option)
+                                $(`#machinery`).removeAttr("disabled");
+                            });
+                        }
+                        else {
+                            $(`#machinery`).prop('disabled', true);
+                            $(`#machinery`).selectpicker('refresh');
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            });
+
+
+            //Change -> Sede
+            $('#headquarters').on('changed.bs.select	', (e) => {
+                const id = e.currentTarget.value ? e.currentTarget.value : "002";
+                let dataImpl = JSON.stringify({
+                    id: id,
+                    estado: 1
+                })
+                //Implement for headquarters
+                axios.get(`${URL}/PDMImplemento/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdSucursal: JSON.parse(dataImpl).id,
+                        Estado: JSON.parse(dataImpl).estado
+                    }
+                })
+                    .then(response => {
+                        $(`#implement`).empty();
+                        if (response.data.length > 0) {
+                            response.data.map((item, index) => {
+                                $("#implement").selectpicker('refresh');
+                                let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                $("#implement").append(option)
+                                $("#implement").removeAttr("disabled");
+                            });
+                        }
+                        else {
+                            $("#implement").prop('disabled', true);
+                            $(`#implement`).selectpicker('refresh');
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+
+                //Machinery for headquarters
+                axios.get(`${URL}/PDMMaquinaria/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdSucursal: JSON.parse(dataImpl).id,
+                        Estado: JSON.parse(dataImpl).estado
+                    }
+                })
+                    .then(response => {
+                        $(`#machinery`).empty();
+                        if (response.data.length > 0) {
+                            response.data.map((item, index) => {
+                                $(`#machinery`).selectpicker('refresh');
+                                let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                $(`#machinery`).append(option)
+                                $(`#machinery`).removeAttr("disabled");
+                            });
+                        }
+                        else {
+                            $(`#machinery`).prop('disabled', true);
+                            $(`#machinery`).selectpicker('refresh');
+                        }
+
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            });
+        })
+    </script>
+}
