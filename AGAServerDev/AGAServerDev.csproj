@@ -185,6 +185,7 @@
     <Compile Include="Models\PDM_IMPLEMENTO.cs" />
     <Compile Include="Models\PDM_MAQUINARIA.cs" />
     <Compile Include="Models\PDM_OBSERVACION.cs" />
+    <Compile Include="Models\PDM_OBSERVACION_EXT.cs" />
     <Compile Include="Models\PDM_OPERARIO.cs" />
     <Compile Include="Models\PDM_PARTE.cs" />
     <Compile Include="Models\PDM_PARTE_DIARIO.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Services\IESTADO.cs" />
     <Compile Include="Services\IIMPLEMENTO.cs" />
     <Compile Include="Services\IMAQUINARIA.cs" />
+    <Compile Include="Services\IOBSERVACION.cs" />
     <Compile Include="Services\IOPERARIO.cs" />
     <Compile Include="Services\IPARTE_DIARIO.cs" />
     <Compile Include="Services\ISISTEMA.cs" />
@@ -220,6 +222,7 @@
     <Compile Include="Services\PDM_ESTADO_SERV.cs" />
     <Compile Include="Services\PDM_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_MAQUINARIA_SERV.cs" />
+    <Compile Include="Services\PDM_OBSERVACION_SERV.cs" />
     <Compile Include="Services\PDM_OPERARIO_SERV.cs" />
     <Compile Include="Services\PDM_PARTE_DIARIO_SERV.cs" />
     <Compile Include="Services\PDM_SISTEMA_SERV.cs" />

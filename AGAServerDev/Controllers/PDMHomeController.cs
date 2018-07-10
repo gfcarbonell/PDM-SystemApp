@@ -1,4 +1,5 @@
-﻿using AGAServerDev.Services;
+﻿using AGAServerDev.Models;
+using AGAServerDev.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -38,11 +39,13 @@ namespace AGAServerDev.Controllers
             PDM_PARTE_DIARIO_SERV parteServ = new PDM_PARTE_DIARIO_SERV();
             PDM_CHECKLIST_SISTEMA_SERV checkListSistemaServ = new PDM_CHECKLIST_SISTEMA_SERV();
             PDM_CHECKLIST_IMPLEMENTO_SERV checkListImplementoServ = new PDM_CHECKLIST_IMPLEMENTO_SERV();
+            PDM_OBSERVACION_SERV obserServ = new PDM_OBSERVACION_SERV();
 
             var parte = parteServ.GetParteById(id);
             var IdCheck = Byte.Parse(id.ToString());
             var checkSistema = checkListSistemaServ.Get(IdCheck);
             var checkImplemento = checkListImplementoServ.Get(IdCheck, parte.IdTipoImplemento);
+            var observaciones = obserServ.Get(id);
 
             ViewBag.IdParte = id;
             ViewBag.IdSucursal = parte.IdSucursal;
@@ -54,6 +57,7 @@ namespace AGAServerDev.Controllers
             ViewBag.IdTurno = parte.IdTurno;
             ViewBag.checkSistema = JsonConvert.SerializeObject(checkSistema);
             ViewBag.checkImplemento = JsonConvert.SerializeObject(checkImplemento);
+            ViewBag.observaciones = JsonConvert.SerializeObject(observaciones);
             return View();
         }
 
