@@ -1,4 +1,5 @@
 ﻿using AGAServerDev.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,20 +30,30 @@ namespace AGAServerDev.Controllers
         [HttpGet]
         public ActionResult CheckListEditar(int id)
         {
-            if (id==0)
+            if (id == 0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            PDM_PARTE_DIARIO_SERV serv = new PDM_PARTE_DIARIO_SERV();
+            PDM_PARTE_DIARIO_SERV parteServ = new PDM_PARTE_DIARIO_SERV();
+            PDM_CHECKLIST_SISTEMA_SERV checkListSistemaServ = new PDM_CHECKLIST_SISTEMA_SERV();
+            PDM_CHECKLIST_IMPLEMENTO_SERV checkListImplementoServ = new PDM_CHECKLIST_IMPLEMENTO_SERV();
 
-            var obj = serv.GetParteById(id);
-            ViewBag.IdSucursal = obj.IdSucursal;
-            ViewBag.IdTipoImplemento = obj.IdTipoImplemento;
-            ViewBag.IdMaquinaria = obj.IdMaquinaria;
-            ViewBag.Fecha = obj.Fecha;
-            ViewBag.IdTurno = obj.IdTurno;
-            ViewBag.PDM_CHECKLIST = obj.PDM_CHECKLIST;
+            var parte = parteServ.GetParteById(id);
+            var IdCheck = Byte.Parse(id.ToString());
+            var checkSistema = checkListSistemaServ.Get(IdCheck);
+            var checkImplemento = checkListImplementoServ.Get(IdCheck, parte.IdTipoImplemento);
+
+            ViewBag.IdParte = id;
+            ViewBag.IdSucursal = parte.IdSucursal;
+            ViewBag.IdTipoImplemento = parte.IdTipoImplemento;
+            ViewBag.IdImplemento = parte.IdImplemento;
+            ViewBag.IdMaquinaria = parte.IdMaquinaria;
+            ViewBag.IdEstado = parte.IdEstado;
+            ViewBag.Fecha = parte.Fecha;
+            ViewBag.IdTurno = parte.IdTurno;
+            ViewBag.checkSistema = JsonConvert.SerializeObject(checkSistema);
+            ViewBag.checkImplemento = JsonConvert.SerializeObject(checkImplemento);
             return View();
         }
 

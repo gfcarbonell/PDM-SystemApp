@@ -204,6 +204,7 @@
     <Compile Include="Services\ICHECKLIST_IMPLEMENTO.cs" />
     <Compile Include="Services\ICHECKLIST_SISTEMA.cs" />
     <Compile Include="Services\IENTIDAD.cs" />
+    <Compile Include="Services\IESTADO.cs" />
     <Compile Include="Services\IIMPLEMENTO.cs" />
     <Compile Include="Services\IMAQUINARIA.cs" />
     <Compile Include="Services\IOPERARIO.cs" />
@@ -216,6 +217,7 @@
     <Compile Include="Services\PDM_ACCION_SERV.cs" />
     <Compile Include="Services\PDM_CHECKLIST_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_CHECKLIST_SISTEMA_SERV.cs" />
+    <Compile Include="Services\PDM_ESTADO_SERV.cs" />
     <Compile Include="Services\PDM_IMPLEMENTO_SERV.cs" />
     <Compile Include="Services\PDM_MAQUINARIA_SERV.cs" />
     <Compile Include="Services\PDM_OPERARIO_SERV.cs" />

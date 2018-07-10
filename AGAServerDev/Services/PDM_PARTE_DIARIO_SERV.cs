@@ -26,7 +26,7 @@ namespace AGAServerDev.Services
         {
             throw new NotImplementedException();
         }
-
+        
         public PDM_PARTE_DIARIO GetParteById(int IdParte)
         {
             using (DBContextPDM db = new DBContextPDM())

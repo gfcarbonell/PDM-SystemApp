@@ -16,6 +16,7 @@ namespace AGAServerDev.Models
         public string IdTipoImplemento { get; set; }
         public string IdOperario { get; set; }
         public string IdTurno { get; set; }
+        public string IdEstado { get; set; }
         public DateTime? Fecha { get; set; }
         public List<PDM_CHECKLIST> PDM_CHECKLIST { get; set; }
         public List<PDM_OBSERVACION> PDM_OBSERVACION { get; set; }
