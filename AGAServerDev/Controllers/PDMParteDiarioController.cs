@@ -23,6 +23,16 @@ namespace AGAServerDev.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult Editar(PDM_PARTE_DIARIO PDM_PARTE_DIARIO
+        )
+        {
+            PDM_PARTE_DIARIO_SERV serv = new PDM_PARTE_DIARIO_SERV();
+            var obj = serv.UpdateOk(PDM_PARTE_DIARIO);
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public JsonResult Todos (DateTime Fecha, int IdUsuario)
         {

@@ -138,6 +138,9 @@
             var checkListImplementoDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["checkImplemento"])));
             var observacionesDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["observaciones"])));
 
+
+
+            console.log(observacionesDefault);
             //Fecha Actual
             var now = new Date(FechaDefault);
             var day = ("0" + now.getDate()).slice(-2);
@@ -366,6 +369,9 @@
                                                     'Content-Type': 'application/json',
                                                 }
                                             }).then(response => {
+
+
+
                                                 let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true">`;
                                                 response.data.map((item, index) => {
                                                     let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
@@ -825,7 +831,7 @@
                                                         </div>
                                                     `;
                                                     $(`#observation-${obser.IdSistema}`).append(observation);
-
+                                                    
                                                     let select;
                                                     axios.get(`${URL}/PDMAccion/`, {
                                                         headers: {
@@ -833,9 +839,14 @@
                                                             'Content-Type': 'application/json',
                                                         }
                                                     }).then(response => {
+                                                        console.log("Observaciones", observacionesDefault)
+
+
+                                                       
+
                                                         let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${obser.IdSistema}" data-live-search="true">`;
-                                                        response.data.map((item, index) => {
-                                                            let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                        response.data.map((action, index) => {
+                                                            let option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion}> ${action.Descripcion} </option>`;
                                                             select = select + option;
                                                         })
                                                         select = select + (`</select>`);
@@ -885,6 +896,7 @@
                                                         'Content-Type': 'application/json',
                                                     }
                                                 }).then(response => {
+                                                    
                                                     let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true">`;
                                                     response.data.map((item, index) => {
                                                         let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
@@ -962,8 +974,10 @@
                 let checkListData = new Array();
                 //Get values - System - Components
                 let numbersComponenet = 0;
+
                 $(".components").each(function () {
                     let idComponente = this.id.split("-").pop();
+
                     if ($(`input[name=${idComponente}]:checked`).length <= 0) {
                         //Validate error select
                         $(`input[name=${idComponente}]`).parent().parent().css({ color: "red" });
@@ -975,6 +989,8 @@
                         $(`input[name=${idComponente}]`).parent().parent().css({ color: "black" });
                         let check = $(`input[name=${idComponente}]:checked`).val();
                         let idSystem = $(`input[name=${idComponente}]:checked`).parent().parent().parent().parent().attr("id").split("-").pop();
+
+                       
                         checkListData.push({
                             IdSistema: idSystem,
                             IdComponente: idComponente,
@@ -1008,16 +1024,25 @@
                         if (idSystemObservation === idSystemAction) {
                             let valueAction = this.value;
                             observationsData.push({
-                                IdParte: 0,
+                                IdParte: IdParteDefault,
                                 IdSistema: idSystemObservation,
                                 IdObservacion: 0,
                                 Observacion: valueObservation,
                                 IdAccion: valueAction
                             })
                         }
-
                     })
                 });
+
+                observacionesDefault.map((observacionDefault, index) => {
+                    observationsData.map((observacion, index) => {
+                        if (observacion.IdSistema === observacionDefault.IdSistema) {
+                            observacion.IdObservacion = observacionDefault.IdObservacion
+                        }
+                    })
+                })
+
+                //Update Observations 
 
                 observationsDefaultData={
                     IdParte: 0,
@@ -1029,21 +1054,49 @@
 
                 //Get Values - Main Head
                 let PDM_PARTE_DIARIO = JSON.stringify({
+                    IdParte: IdParteDefault,
                     IdSucursal: $("#headquarters").val(),
                     IdMaquinaria: $("#machinery").val(),
                     IdImplemento: $("#implement").val(),
                     IdTipoImplemento: $("#implementType").val(),
-                    Fecha: $("#date").val(),
                     IdOperario: $("#operator").val() | "010129".toString(),
                     IdTurno: $("#turn").val(),
-                    UsuarioCreacion: 1,
                     PDM_CHECKLIST: checkListData,
                     PDM_OBSERVACION: observationsData.length !== 0 ? observationsData : observationsDefaultData,
-                    IdUsuario: 1
+                    IdUsuario: 2
                 });
-
+                
                 console.log(PDM_PARTE_DIARIO);
-                console.log("ok")
+                axios.post(`${URL}/PDMParteDiario/Editar`, PDM_PARTE_DIARIO, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    $.notify({
+                        // options
+                        message: `Exito al Actualizar!`
+                    },
+                        {
+                            // settings
+                            type: 'success',
+                            delay: 100,
+                        });
+                    $("#form-list")[0].reset();
+
+                }).catch(error => {
+                    console.log(response)
+                    $.notify({
+                        // options
+                        message: `Error al Actualizar!`
+                    },
+                    {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                })
             })
         })
     </script>

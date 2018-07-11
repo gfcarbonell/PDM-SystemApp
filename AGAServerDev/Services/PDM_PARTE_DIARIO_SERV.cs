@@ -261,8 +261,11 @@ namespace AGAServerDev.Services
                 }
             }
         }
-
         public void Update(PDM_PARTE_DIARIO entidad)
+        {
+            throw new NotImplementedException();
+        }
+        public PDM_PARTE_DIARIO UpdateOk(PDM_PARTE_DIARIO entidad)
         {
             using (DBContextPDM db = new DBContextPDM())
             {
@@ -270,6 +273,7 @@ namespace AGAServerDev.Services
                 {
                     try
                     {
+                        var IdParteParameter = new SqlParameter();
                         var IdSucursalParameter = new SqlParameter();
                         var IdMaquinariaParameter = new SqlParameter();
                         var IdImplementoParameter = new SqlParameter();
@@ -279,6 +283,11 @@ namespace AGAServerDev.Services
                         var TablaCheckListParameter = new SqlParameter();
                         var TablaObservacionParameter = new SqlParameter();
                         var UsuarioParameter = new SqlParameter();
+
+                        IdParteParameter.ParameterName = "@IdParte";
+                        IdParteParameter.Direction = ParameterDirection.Input;
+                        IdParteParameter.SqlDbType = SqlDbType.VarChar;
+                        IdParteParameter.Value = entidad.IdSucursal;
 
                         IdSucursalParameter.ParameterName = "@IdSucursal";
                         IdSucursalParameter.Direction = ParameterDirection.Input;
@@ -359,14 +368,14 @@ namespace AGAServerDev.Services
                         UsuarioParameter.SqlDbType = SqlDbType.SmallInt;
                         UsuarioParameter.Value = entidad.IdUsuario;
 
-                        var x = db.Database.SqlQuery<PDM_PARTE_DIARIO>("dbo.[PR_PDM_PARTE_INS] " +
-                            "@IdSucursal, @IdMaquinaria, @IdImplemento, @IdTipoImplemento, @IdOperario, @IdTurno, @TablaCheckList, @TablaObservacion, @IdUsuario",
-                            IdSucursalParameter, IdMaquinariaParameter, IdImplementoParameter,
+                        var obj = db.Database.SqlQuery<PDM_PARTE_DIARIO>("dbo.[PR_PDM_PARTE_UPD] " +
+                            "@IdParte, @IdSucursal, @IdMaquinaria, @IdImplemento, @IdTipoImplemento, @IdOperario, @IdTurno, @TablaCheckList, @TablaObservacion, @IdUsuario",
+                            IdParteParameter, IdSucursalParameter, IdMaquinariaParameter, IdImplementoParameter,
                             @IdTipoImplementoParameter, IdOperarioParameter, IdTurnoParameter, TablaCheckListParameter, TablaObservacionParameter, UsuarioParameter
                             ).FirstOrDefault();
 
                         ctxTrans.Commit(); // OK
-                        return x;
+                        return obj;
                     }
                     catch (NullReferenceException ex)
                     {
