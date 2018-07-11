@@ -138,9 +138,6 @@
             var checkListImplementoDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["checkImplemento"])));
             var observacionesDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["observaciones"])));
 
-
-
-            console.log(observacionesDefault);
             //Fecha Actual
             var now = new Date(FechaDefault);
             var day = ("0" + now.getDate()).slice(-2);
@@ -148,6 +145,27 @@
             var today = now.getFullYear() + "-" + (month) + "-" + (day);
 
             $(`#date`).val(today);
+
+            //GET -> Controller:PDMEstado/Index
+            //Inicializar Turno
+           
+            axios.get(`${URL}/PDMEstado/`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                response.data.map(item => {
+                    if (item.IdEstado === IdEstado) {
+                        $(`#status`).val(item.Descripcion);
+                    }
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            
 
             //GET -> Controller:PDMTurno/Index
             //Inicializar Turno
@@ -299,11 +317,11 @@
                                                 //TextArea Observaciones - Aplica - Acciones
                                                 let observation =
                                                     `
-                                                        <div class=" col-md-8">
+                                                        <div class="col-md-8">
                                                             <div class="d-flex justify-content-between align-items-center">
                                                                 <label for="observation-system-${obser.IdSistema}">Observaciones:</label>
                                                             </div>
-                                                            <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}" required>${obser.Observacion}</textarea>
+                                                            <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}">${obser.Observacion}</textarea>
                                                         </div>
                                                         <div class="col-md-4" id="container-action-${obser.IdSistema}">
                                                             <label for="system-action-${obser.IdSistema}">Acciones</label>
@@ -320,8 +338,17 @@
                                                     }
                                                 }).then(response => {
                                                     let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${obser.IdSistema}" data-live-search="true">`;
-                                                    response.data.map((item, index) => {
-                                                        let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                    
+                                                    response.data.map((action, index) => {
+                                                        
+                                                        let option;
+                                                        if (obser.IdAccion === action.IdAccion) {
+                                                            option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion} selected> ${action.Descripcion} </option>`;
+                                                        }
+                                                        else {
+                                                            option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion}> ${action.Descripcion} </option>`;
+                                                        }
+                                                        //let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
                                                         select = select + option;
                                                     })
                                                     select = select + (`</select>`);
@@ -369,12 +396,9 @@
                                                     'Content-Type': 'application/json',
                                                 }
                                             }).then(response => {
-
-
-
                                                 let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true">`;
-                                                response.data.map((item, index) => {
-                                                    let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                response.data.map((action, index) => {
+                                                    let option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion}> ${action.Descripcion} </option>`;
                                                     select = select + option;
                                                 })
                                                 select = select + (`</select>`);
@@ -839,14 +863,17 @@
                                                             'Content-Type': 'application/json',
                                                         }
                                                     }).then(response => {
-                                                        console.log("Observaciones", observacionesDefault)
-
-
-                                                       
-
                                                         let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${obser.IdSistema}" data-live-search="true">`;
                                                         response.data.map((action, index) => {
-                                                            let option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion}> ${action.Descripcion} </option>`;
+
+                                                            let option;
+                                                            if (obser.IdAccion === action.IdAccion) {
+                                                                option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion} selected> ${action.Descripcion} </option>`;
+                                                            }
+                                                            else {
+                                                                option = `<option data-tokens=${action.IdAccion} value=${action.IdAccion}> ${action.Descripcion} </option>`;
+                                                            }
+
                                                             select = select + option;
                                                         })
                                                         select = select + (`</select>`);
@@ -1033,7 +1060,7 @@
                         }
                     })
                 });
-
+                //Update Observations 
                 observacionesDefault.map((observacionDefault, index) => {
                     observationsData.map((observacion, index) => {
                         if (observacion.IdSistema === observacionDefault.IdSistema) {
@@ -1042,15 +1069,13 @@
                     })
                 })
 
-                //Update Observations 
-
-                observationsDefaultData={
+                observationsDefaultData=[{
                     IdParte: 0,
                     IdSistema: "00",
                     IdObservacion: 0,
                     Observacion: "-------",
                     IdAccion: "00"
-                }
+                }]
 
                 //Get Values - Main Head
                 let PDM_PARTE_DIARIO = JSON.stringify({

@@ -10,7 +10,7 @@ namespace AGAServerDev.Controllers
 {
     public class AuthUserController : Controller
     {
-        // Post: AuthUser
+        // Post: AuthUser - Login
         [HttpPost]
         public JsonResult Login(AUTH_USER auth_user)
         {
@@ -19,7 +19,7 @@ namespace AGAServerDev.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
-        // Post: AuthUser
+        // Post: AuthUser - Permiso
         [HttpPost]
         public JsonResult Permisos(AUTH_USER auth_user)
         {

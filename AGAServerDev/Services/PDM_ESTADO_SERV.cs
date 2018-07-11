@@ -20,7 +20,7 @@ namespace AGAServerDev.Services
             throw new NotImplementedException();
         }
 
-        public ICollection<PDM_ESTADO> Get(string IdEstado)
+        public ICollection<PDM_ESTADO> Get()
         {
             using (DBContextPDM db = new DBContextPDM())
             {
@@ -28,19 +28,9 @@ namespace AGAServerDev.Services
                 {
                     try
                     {
-                        var IdEstadoParameter = new SqlParameter();
-
-                        IdEstadoParameter.ParameterName = "@Estado";
-                        IdEstadoParameter.Direction = ParameterDirection.Input;
-                        IdEstadoParameter.SqlDbType = SqlDbType.VarChar;
-                        IdEstadoParameter.Value = IdEstado;
-
-                        var operarios = db.Database.SqlQuery<PDM_ESTADO>("dbo.[PR_PDM_OPERADOR_QRY_IdPersonal] @IdEstado",
-                            IdEstadoParameter
-                        ).ToList();
-
+                        var estados = db.Database.SqlQuery<PDM_ESTADO>("dbo.[PR_PDM_ESTADO_QRY]").ToList();
                         ctxTrans.Commit(); // OK
-                        return operarios;
+                        return estados;
                     }
                     catch (Exception ex)
                     {
@@ -49,11 +39,6 @@ namespace AGAServerDev.Services
                     }
                 }
             }
-        }
-
-        public ICollection<PDM_ESTADO> Get()
-        {
-            throw new NotImplementedException();
         }
 
         public void Save(PDM_ESTADO entidad)

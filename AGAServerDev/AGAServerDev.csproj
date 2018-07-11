@@ -160,6 +160,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Contexts\DBContextPDM.cs" />
     <Compile Include="Controllers\AuthUserController.cs" />
+    <Compile Include="Controllers\PDMEstadoController.cs" />
     <Compile Include="Controllers\PDMCheckListImplementoController.cs" />
     <Compile Include="Controllers\PDMCheckListSistemaController.cs" />
     <Compile Include="Controllers\PDMAccionController.cs" />
@@ -767,6 +768,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\AuthUser\" />
+    <Folder Include="Views\Estado\" />
     <Folder Include="Views\PDMAccion\" />
     <Folder Include="Views\PDMCheckListImplemento\" />
     <Folder Include="Views\PDMCheckListSistema\" />

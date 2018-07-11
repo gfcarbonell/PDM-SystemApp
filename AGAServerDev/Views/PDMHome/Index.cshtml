@@ -69,16 +69,29 @@
     </form>
 </div>
 
+@Html.Hidden("RedirectToCheckList", Url.Action("CheckList", "PDMHome"));
+
 @section scripts {
-   
+
     <script type="text/javascript">
         $(() => {
-            // Select -> Desarrollo o Producción
-           
+            let data = localStorage.getItem("data");
+            const user = JSON.parse(data);
+            //Get Date
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
             var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+            if (!user) {
+                let url = $("#RedirectToLogin").val(); location.href = url;
+            }
+            else {
+                
+               
+            }
+
+            //Initializate Date
             $('#date').val(today);
 
             //GET -> Controller:Tipo Implemento/Index
@@ -119,17 +132,17 @@
                         'Content-Type': 'application/json',
                     }
                 })
-                .then(response => {
-                    response.data.map((item, index) => {
-                        let option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
-                        $("#implementType").append(option)
-                        $("#implementType").selectpicker('refresh');
-                        $("#implementType").removeAttr("disabled");
+                    .then(response => {
+                        response.data.map((item, index) => {
+                            let option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
+                            $("#implementType").append(option)
+                            $("#implementType").selectpicker('refresh');
+                            $("#implementType").removeAttr("disabled");
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
                     });
-                })
-                .catch(error => {
-                    console.log(error);
-                });
             });
             //GET -> Controller:PDMTurno/Index
             //Inicializar Turno
@@ -222,25 +235,25 @@
                         Estado: JSON.parse(dataImpl).estado
                     }
                 })
-                .then(response => {
-                    $(`#machinery`).empty();
-                    if (response.data.length > 0) {
-                        response.data.map((item, index) => {
+                    .then(response => {
+                        $(`#machinery`).empty();
+                        if (response.data.length > 0) {
+                            response.data.map((item, index) => {
+                                $(`#machinery`).selectpicker('refresh');
+                                let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                $(`#machinery`).append(option)
+                                $(`#machinery`).removeAttr("disabled");
+                            });
+                        }
+                        else {
+                            $(`#machinery`).prop('disabled', true);
                             $(`#machinery`).selectpicker('refresh');
-                            let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
-                            $(`#machinery`).append(option)
-                            $(`#machinery`).removeAttr("disabled");
-                        });
-                    }
-                    else {
-                        $(`#machinery`).prop('disabled', true);
-                        $(`#machinery`).selectpicker('refresh');
-                    }
+                        }
 
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             });
             //Change -> Type Implement
             $('#implementType').on('changed.bs.select	', (e) => {
@@ -259,109 +272,109 @@
                         IdTipoImplemento: JSON.parse(dataImpl).IdTipoImplemento
                     }
                 })
-                .then(response => {
-                    let implemento = response.data[0];
-                    $(`#table-implement`).empty();
-                    let table =
-                        `
-                        <table class="table table-hover" id="system-${implemento.IdSistema}" >
-                            <thead class="thead-light text-white" id="systems-head">
-                                <tr class="d-flex" id="systems-head-th">
-                                    <th class="col-1 text-center font-weight-bold">#</th>
-                                    <th class="col-5 text-left font-weight-bold">
-                                        ${implemento.Sistema}
-                                    </th>
-                                    <th class="col-2 text-center font-weight-bold">OK</th>
-                                    <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                    <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                </tr>
-                            </thead>
-                        </table>`;
-                    $("#table-implement").append(table);
-                    //Observation
-                    $("#table-implement").append(`<div class="table  d-flex justify-content-between" id="observation-${implemento.IdSistema}"/>`);
-                    return response;
-                })
-                .then(response => {
-                    let implemento = response.data[0];
-                    var indice = 1;
-                    var tbody = "<tbody>";
-                    response.data.map((item, index) => {
-                        let tr = `
-                                <tr class="d-flex components" id="component-${item.IdComponente}">
-                                    <td class="col-1 text-center">${indice}</td>
-                                    <td class="col-5 text-left">${item.Componente}</td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${item.IdComponente}></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
-                                </tr>
-                            `;
-                        tbody = tbody + tr;
-                        indice = indice + 1;
+                    .then(response => {
+                        let implemento = response.data[0];
+                        $(`#table-implement`).empty();
+                        let table =
+                            `
+                                <table class="table table-hover" id="system-${implemento.IdSistema}" >
+                                    <thead class="thead-light text-white" id="systems-head">
+                                        <tr class="d-flex" id="systems-head-th">
+                                            <th class="col-1 text-center font-weight-bold">#</th>
+                                            <th class="col-5 text-left font-weight-bold">
+                                                ${implemento.Sistema}
+                                            </th>
+                                            <th class="col-2 text-center font-weight-bold">OK</th>
+                                            <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                            <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                        </tr>
+                                    </thead>
+                                </table>`;
+                        $("#table-implement").append(table);
+                        //Observation
+                        $("#table-implement").append(`<div class="table  d-flex justify-content-between" id="observation-${implemento.IdSistema}"/>`);
+                        return response;
                     })
-                    tbody = tbody + "</tbody>"
-                    $(`#system-${implemento.IdSistema}`).append(tbody);
-                    return response;
-                })
-                .then(response => {
-                    let children = [];
-                    response.data.map((parte, index) => {
-                        $(`input[name=${parte.IdComponente}]`).change(() => {
-                            var check = $(`input[name=${parte.IdComponente}]:checked`).val();
-                            if (check == 1) {
-                                let length = $(`#observation-${parte.IdSistema}`).children().length;
-                                if (length == 0) {
-                                    let observation =
-                                        `
-                                                    <div class=" col-md-8">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
-                                                        </div>
-                                                        <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
+                    .then(response => {
+                        let implemento = response.data[0];
+                        var indice = 1;
+                        var tbody = "<tbody>";
+                        response.data.map((item, index) => {
+                            let tr = `
+                                        <tr class="d-flex components" id="component-${item.IdComponente}">
+                                            <td class="col-1 text-center">${indice}</td>
+                                            <td class="col-5 text-left">${item.Componente}</td>
+                                            <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${item.IdComponente}></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
+                                        </tr>
+                                    `;
+                            tbody = tbody + tr;
+                            indice = indice + 1;
+                        })
+                        tbody = tbody + "</tbody>"
+                        $(`#system-${implemento.IdSistema}`).append(tbody);
+                        return response;
+                    })
+                    .then(response => {
+                        let children = [];
+                        response.data.map((parte, index) => {
+                            $(`input[name=${parte.IdComponente}]`).change(() => {
+                                var check = $(`input[name=${parte.IdComponente}]:checked`).val();
+                                if (check == 1) {
+                                    let length = $(`#observation-${parte.IdSistema}`).children().length;
+                                    if (length == 0) {
+                                        let observation =
+                                            `
+                                                <div class=" col-md-8">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
                                                     </div>
-                                                    <div class="col-md-4" id="container-action-${parte.IdSistema}">
-                                                        <label for="system-action-${parte.IdSistema}">Acciones</label>
+                                                    <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
+                                                </div>
+                                                <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                    <label for="system-action-${parte.IdSistema}">Acciones</label>
 
-                                                    </div>
-                                                `;
-                                    $(`#observation-${parte.IdSistema}`).append(observation);
-                                    let select;
-                                    if ($(`#action-${parte.IdSistema}`).children() > 0) {
+                                                </div>
+                                            `;
+                                        $(`#observation-${parte.IdSistema}`).append(observation);
+                                        let select;
+                                        if ($(`#action-${parte.IdSistema}`).children() > 0) {
 
-                                    }
-                                    else {
-                                        axios.get(`${URL}/PDMAccion/`, {
-                                            headers: {
-                                                'Accept': 'application/json',
-                                                'Content-Type': 'application/json',
-                                            }
-                                        }).then(response => {
-                                            let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true">`;
-                                            response.data.map((item, index) => {
-                                                let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
-                                                select = select + option;
+                                        }
+                                        else {
+                                            axios.get(`${URL}/PDMAccion/`, {
+                                                headers: {
+                                                    'Accept': 'application/json',
+                                                    'Content-Type': 'application/json',
+                                                }
+                                            }).then(response => {
+                                                let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" disabled data-live-search="true">`;
+                                                response.data.map((item, index) => {
+                                                    let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                    select = select + option;
+                                                })
+                                                select = select + (`</select>`);
+                                                $(`#container-action-${parte.IdSistema}`).append(select)
+                                                $(`#system-action-${parte.IdSistema}`).selectpicker('refresh');
                                             })
-                                            select = select + (`</select>`);
-                                            $(`#container-action-${parte.IdSistema}`).append(select)
-                                            $(`#system-action-${parte.IdSistema}`).selectpicker('refresh');
-                                        })
+                                        }
                                     }
+                                    children[index] = true;
                                 }
-                                children[index] = true;
-                            }
-                            else if (check == 0 || check == 2) {
-                                children[index] = false;
-                            }
-                            if (children.every(element => element == false)) {
-                                $(`#observation-${parte.IdSistema}`).empty();
-                            }
+                                else if (check == 0 || check == 2) {
+                                    children[index] = false;
+                                }
+                                if (children.every(element => element == false)) {
+                                    $(`#observation-${parte.IdSistema}`).empty();
+                                }
+                            });
                         });
+                        return response;
+                    })
+                    .catch(error => {
+                        console.log(error);
                     });
-                    return response;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
             });
 
             //GET -> Controller:Sistema/IndexJSON
@@ -372,136 +385,136 @@
                     'Content-Type': 'application/json',
                 }
             })
-            .then(response => {
-                response.data.map((item, index) => {
-                    let table =
-                        `
-                            <table class="table table-hover systems" id="system-${item.IdSistema}" >
-                                <thead class="thead-light text-white" id="systems-head">
-                                    <tr class="d-flex" id="systems-head-th">
-                                        <th class="col-1 text-center font-weight-bold">#</th>
-                                        <th class="col-5 text-left font-weight-bold">
-                                            ${item.Descripcion}
-                                        </th>
-                                        <th class="col-2 text-center font-weight-bold">OK</th>
-                                        <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                        <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                    </tr>
-                                </thead>
-                            </table>`;
-                    $("#table-system").append(table);
-                    //Observation
-                    $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);
-                });
-                return response;
-            })
-            .then((response) => {
-                let dataParte = JSON.stringify({
-                    id: 0
-                });
-                //Add Component -> System
-                response.data.map((sistema, index) => {
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let table =
+                            `
+                                    <table class="table table-hover systems" id="system-${item.IdSistema}" >
+                                        <thead class="thead-light text-white" id="systems-head">
+                                            <tr class="d-flex" id="systems-head-th">
+                                                <th class="col-1 text-center font-weight-bold">#</th>
+                                                <th class="col-5 text-left font-weight-bold">
+                                                    ${item.Descripcion}
+                                                </th>
+                                                <th class="col-2 text-center font-weight-bold">OK</th>
+                                                <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                                <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                            </tr>
+                                        </thead>
+                                    </table>`;
+                        $("#table-system").append(table);
+                        //Observation
+                        $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);
+                    });
+                    return response;
+                })
+                .then((response) => {
+                    let dataParte = JSON.stringify({
+                        id: 0
+                    });
+                    //Add Component -> System
+                    response.data.map((sistema, index) => {
 
-                    axios.get(`${URL}/PDMCheckListSistema/Index`, {
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                        params: {
-                            IdParte: JSON.parse(dataParte).id,
-                        }
-                    })
-                    .then(response => {
-                        var indice = 1;
-                        var tbody = "<tbody>";
-                        response.data.map((parte, index) => {
-                            if (sistema.IdSistema === parte.IdSistema) {
-                                //Add Componente -> Table Sistema
-                                let tr = `
-                                <tr class="d-flex components" id="component-${parte.IdComponente}">
-                                    <td class="col-1 text-center">${indice}</td>
-                                    <td class="col-5 text-left">${parte.Componente}</td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${parte.IdComponente}></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
-                                    <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
-                                </tr>
-                            `;
-                                tbody = tbody + tr;
-                                indice = indice + 1;
+                        axios.get(`${URL}/PDMCheckListSistema/Index`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            params: {
+                                IdParte: JSON.parse(dataParte).id,
                             }
-                        });
-                        tbody = tbody + "</tbody>"
-                        $(`#system-${sistema.IdSistema}`).append(tbody);
-                        return response;
-                    })
-                    .then(response => {
-                        var children = [];
-                        response.data.map((parte, index) => {
-                            if (sistema.IdSistema === parte.IdSistema) {
-                                $(`input[name=${parte.IdComponente}]`).change(() => {
-                                    var check = parseInt($(`input[name=${parte.IdComponente}]:checked`).val());
-                                    if (check === 1) {
-                                        let length = $(`#observation-${parte.IdSistema}`).children().length;
-                                        if (length === 0) {
-                                            //TextArea Observaciones - Aplica - Acciones
-                                            let observation =
-                                                `
-                                                <div class=" col-md-8">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
-                                                    </div>
-                                                    <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}" required></textarea>
-                                                </div>
-                                                <div class="col-md-4" id="container-action-${parte.IdSistema}">
-                                                    <label for="system-action-${parte.IdSistema}">Acciones</label>
-
-                                                </div>
-                                            `;
-                                            $(`#observation-${parte.IdSistema}`).append(observation);
-
-                                            let select;
-                                            if ($(`#system-action-${parte.IdSistema}`).children() > 0) {
-
-                                            }
-                                            else {
-                                                axios.get(`${URL}/PDMAccion/`, {
-                                                    headers: {
-                                                        'Accept': 'application/json',
-                                                        'Content-Type': 'application/json',
-                                                    }
-                                                }).then(response => {
-                                                    let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true" disabled>`;
-                                                    response.data.map((item, index) => {
-                                                        let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
-                                                        select = select + option;
-                                                    })
-                                                    select = select + (`</select>`);
-                                                    $(`#container-action-${parte.IdSistema}`).append(select)
-                                                    $(`#system-action-${parte.IdSistema}`).selectpicker('refresh');
-                                                })
-                                            }
-                                            
-                                        }
-                                        children[index] = true;
+                        })
+                            .then(response => {
+                                var indice = 1;
+                                var tbody = "<tbody>";
+                                response.data.map((parte, index) => {
+                                    if (sistema.IdSistema === parte.IdSistema) {
+                                        //Add Componente -> Table Sistema
+                                        let tr = `
+                                        <tr class="d-flex components" id="component-${parte.IdComponente}">
+                                            <td class="col-1 text-center">${indice}</td>
+                                            <td class="col-5 text-left">${parte.Componente}</td>
+                                            <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
+                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
+                                        </tr>
+                                    `;
+                                        tbody = tbody + tr;
+                                        indice = indice + 1;
                                     }
-                                    else if (check == 0 || check == 2) {
-                                        children[index] = false;
-                                    }
-                                    if (children.every(element => element == false)) {
-                                        $(`#observation-${parte.IdSistema}`).empty();
-                                    }
-
                                 });
-                                
-                            }
-                        });
-  
+                                tbody = tbody + "</tbody>"
+                                $(`#system-${sistema.IdSistema}`).append(tbody);
+                                return response;
+                            })
+                            .then(response => {
+                                var children = [];
+                                response.data.map((parte, index) => {
+                                    if (sistema.IdSistema === parte.IdSistema) {
+                                        $(`input[name=${parte.IdComponente}]`).change(() => {
+                                            var check = parseInt($(`input[name=${parte.IdComponente}]:checked`).val());
+                                            if (check === 1) {
+                                                let length = $(`#observation-${parte.IdSistema}`).children().length;
+                                                if (length === 0) {
+                                                    //TextArea Observaciones - Aplica - Acciones
+                                                    let observation =
+                                                        `
+                                                        <div class=" col-md-8">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
+                                                            </div>
+                                                            <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}" required></textarea>
+                                                        </div>
+                                                        <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                            <label for="system-action-${parte.IdSistema}">Acciones</label>
+
+                                                        </div>
+                                                    `;
+                                                    $(`#observation-${parte.IdSistema}`).append(observation);
+
+                                                    let select;
+                                                    if ($(`#system-action-${parte.IdSistema}`).children() > 0) {
+
+                                                    }
+                                                    else {
+                                                        axios.get(`${URL}/PDMAccion/`, {
+                                                            headers: {
+                                                                'Accept': 'application/json',
+                                                                'Content-Type': 'application/json',
+                                                            }
+                                                        }).then(response => {
+                                                            let select = `<select class="form-control selectpicker actionsSystem" id="system-action-${parte.IdSistema}" data-live-search="true" disabled>`;
+                                                            response.data.map((item, index) => {
+                                                                let option = `<option data-tokens=${item.IdAccion} value=${item.IdAccion}> ${item.Descripcion} </option>`;
+                                                                select = select + option;
+                                                            })
+                                                            select = select + (`</select>`);
+                                                            $(`#container-action-${parte.IdSistema}`).append(select)
+                                                            $(`#system-action-${parte.IdSistema}`).selectpicker('refresh');
+                                                        })
+                                                    }
+
+                                                }
+                                                children[index] = true;
+                                            }
+                                            else if (check == 0 || check == 2) {
+                                                children[index] = false;
+                                            }
+                                            if (children.every(element => element == false)) {
+                                                $(`#observation-${parte.IdSistema}`).empty();
+                                            }
+
+                                        });
+
+                                    }
+                                });
+
+                            })
                     })
                 })
-            })
-            .catch(error => {
-                console.log(error);
-            });
+                .catch(error => {
+                    console.log(error);
+                });
 
             //Submit
             $(`#form-list`).submit((event) => {
@@ -599,6 +612,16 @@
                     })
                 });
 
+                var observationsDefaultData = [{
+                    IdParte: 0,
+                    IdSistema: "00",
+                    IdObservacion: 0,
+                    Observacion: "-------",
+                    IdAccion: "00"
+                }]
+
+                const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData
+
                 //Get Values - Main Head
                 let PDM_PARTE_DIARIO = JSON.stringify({
                     IdSucursal: $("#headquarters").val(),
@@ -610,8 +633,8 @@
                     IdTurno: $("#turn").val(),
                     UsuarioCreacion: 1,
                     PDM_CHECKLIST: checkListData,
-                    PDM_OBSERVACION: observationsData,
-                    IdUsuario: 1
+                    PDM_OBSERVACION: obrData,
+                    IdUsuario: user.CodUsuario
                 });
 
                 console.log(PDM_PARTE_DIARIO);
@@ -632,9 +655,23 @@
                         type: 'success',
                         delay: 100,
                     });
+                    $(`#headquarters`).selectpicker('refresh');
+                    $(`#machinery`).selectpicker('refresh');
+                    $(`#implement`).selectpicker('refresh');
+                    $(`#implementType`).selectpicker('refresh');
+                    $(`#operator`).selectpicker('refresh');
                     $("#form-list")[0].reset();
-
                 }).catch(error => {
+                   
+                    $.notify({
+                        // options
+                        message: `Error al Guardar!`
+                    },
+                    {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
                     console.log(response)
                 })
             })
