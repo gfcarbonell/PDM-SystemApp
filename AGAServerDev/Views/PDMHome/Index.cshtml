@@ -87,8 +87,8 @@
                 let url = $("#RedirectToLogin").val(); location.href = url;
             }
             else {
-                
-               
+
+
             }
 
             //Initializate Date
@@ -277,19 +277,19 @@
                         $(`#table-implement`).empty();
                         let table =
                             `
-                                <table class="table table-hover" id="system-${implemento.IdSistema}" >
-                                    <thead class="thead-light text-white" id="systems-head">
-                                        <tr class="d-flex" id="systems-head-th">
-                                            <th class="col-1 text-center font-weight-bold">#</th>
-                                            <th class="col-5 text-left font-weight-bold">
-                                                ${implemento.Sistema}
-                                            </th>
-                                            <th class="col-2 text-center font-weight-bold">OK</th>
-                                            <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                            <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                        </tr>
-                                    </thead>
-                                </table>`;
+                                    <table class="table table-hover" id="system-${implemento.IdSistema}" >
+                                        <thead class="thead-light text-white" id="systems-head">
+                                            <tr class="d-flex" id="systems-head-th">
+                                                <th class="col-1 text-center font-weight-bold">#</th>
+                                                <th class="col-5 text-left font-weight-bold">
+                                                    ${implemento.Sistema}
+                                                </th>
+                                                <th class="col-2 text-center font-weight-bold">OK</th>
+                                                <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                                <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                            </tr>
+                                        </thead>
+                                    </table>`;
                         $("#table-implement").append(table);
                         //Observation
                         $("#table-implement").append(`<div class="table  d-flex justify-content-between" id="observation-${implemento.IdSistema}"/>`);
@@ -301,14 +301,14 @@
                         var tbody = "<tbody>";
                         response.data.map((item, index) => {
                             let tr = `
-                                        <tr class="d-flex components" id="component-${item.IdComponente}">
-                                            <td class="col-1 text-center">${indice}</td>
-                                            <td class="col-5 text-left">${item.Componente}</td>
-                                            <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${item.IdComponente}></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
-                                        </tr>
-                                    `;
+                                            <tr class="d-flex components" id="component-${item.IdComponente}">
+                                                <td class="col-1 text-center">${indice}</td>
+                                                <td class="col-5 text-left">${item.Componente}</td>
+                                                <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${item.IdComponente}></td>
+                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
+                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
+                                            </tr>
+                                        `;
                             tbody = tbody + tr;
                             indice = indice + 1;
                         })
@@ -326,17 +326,17 @@
                                     if (length == 0) {
                                         let observation =
                                             `
-                                                <div class=" col-md-8">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
+                                                    <div class=" col-md-8">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
+                                                        </div>
+                                                        <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
                                                     </div>
-                                                    <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
-                                                </div>
-                                                <div class="col-md-4" id="container-action-${parte.IdSistema}">
-                                                    <label for="system-action-${parte.IdSistema}">Acciones</label>
+                                                    <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                        <label for="system-action-${parte.IdSistema}">Acciones</label>
 
-                                                </div>
-                                            `;
+                                                    </div>
+                                                `;
                                         $(`#observation-${parte.IdSistema}`).append(observation);
                                         let select;
                                         if ($(`#action-${parte.IdSistema}`).children() > 0) {
@@ -389,19 +389,19 @@
                     response.data.map((item, index) => {
                         let table =
                             `
-                                    <table class="table table-hover systems" id="system-${item.IdSistema}" >
-                                        <thead class="thead-light text-white" id="systems-head">
-                                            <tr class="d-flex" id="systems-head-th">
-                                                <th class="col-1 text-center font-weight-bold">#</th>
-                                                <th class="col-5 text-left font-weight-bold">
-                                                    ${item.Descripcion}
-                                                </th>
-                                                <th class="col-2 text-center font-weight-bold">OK</th>
-                                                <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                                <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                            </tr>
-                                        </thead>
-                                    </table>`;
+                                        <table class="table table-hover systems" id="system-${item.IdSistema}" >
+                                            <thead class="thead-light text-white" id="systems-head">
+                                                <tr class="d-flex" id="systems-head-th">
+                                                    <th class="col-1 text-center font-weight-bold">#</th>
+                                                    <th class="col-5 text-left font-weight-bold">
+                                                        ${item.Descripcion}
+                                                    </th>
+                                                    <th class="col-2 text-center font-weight-bold">OK</th>
+                                                    <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                                    <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                                </tr>
+                                            </thead>
+                                        </table>`;
                         $("#table-system").append(table);
                         //Observation
                         $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);
@@ -431,14 +431,14 @@
                                     if (sistema.IdSistema === parte.IdSistema) {
                                         //Add Componente -> Table Sistema
                                         let tr = `
-                                        <tr class="d-flex components" id="component-${parte.IdComponente}">
-                                            <td class="col-1 text-center">${indice}</td>
-                                            <td class="col-5 text-left">${parte.Componente}</td>
-                                            <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
-                                            <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
-                                        </tr>
-                                    `;
+                                            <tr class="d-flex components" id="component-${parte.IdComponente}">
+                                                <td class="col-1 text-center">${indice}</td>
+                                                <td class="col-5 text-left">${parte.Componente}</td>
+                                                <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${parte.IdComponente}></td>
+                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
+                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
+                                            </tr>
+                                        `;
                                         tbody = tbody + tr;
                                         indice = indice + 1;
                                     }
@@ -459,17 +459,17 @@
                                                     //TextArea Observaciones - Aplica - Acciones
                                                     let observation =
                                                         `
-                                                        <div class=" col-md-8">
-                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
+                                                            <div class=" col-md-8">
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
+                                                                </div>
+                                                                <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}" required></textarea>
                                                             </div>
-                                                            <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}" required></textarea>
-                                                        </div>
-                                                        <div class="col-md-4" id="container-action-${parte.IdSistema}">
-                                                            <label for="system-action-${parte.IdSistema}">Acciones</label>
+                                                            <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                                <label for="system-action-${parte.IdSistema}">Acciones</label>
 
-                                                        </div>
-                                                    `;
+                                                            </div>
+                                                        `;
                                                     $(`#observation-${parte.IdSistema}`).append(observation);
 
                                                     let select;
@@ -650,11 +650,11 @@
                         // options
                         message: `Exito al Guardar!`
                     },
-                    {
-                        // settings
-                        type: 'success',
-                        delay: 100,
-                    });
+                        {
+                            // settings
+                            type: 'success',
+                            delay: 100,
+                        });
                     $(`#headquarters`).selectpicker('refresh');
                     $(`#machinery`).selectpicker('refresh');
                     $(`#implement`).selectpicker('refresh');
@@ -662,16 +662,16 @@
                     $(`#operator`).selectpicker('refresh');
                     $("#form-list")[0].reset();
                 }).catch(error => {
-                   
+
                     $.notify({
                         // options
                         message: `Error al Guardar!`
                     },
-                    {
-                        // settings
-                        type: 'danger',
-                        delay: 100,
-                    });
+                        {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
                     console.log(response)
                 })
             })
