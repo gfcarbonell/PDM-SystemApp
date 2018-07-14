@@ -16,6 +16,7 @@
                 <th scope="col" class="text-center">Operario</th>
                 <th scope="col" class="text-center">Turno</th>
                 <th scope="col" class="text-center">Fecha</th>
+                <th scope="col" class="text-center">Estado</th>
                 <th scope="col" class="text-center">Editar</th>
             </tr>
         </thead>
@@ -77,6 +78,7 @@
                             <td class="text-center">${item.IdOperario}</td>
                             <td class="text-center">${item.IdTurno}</td>
                             <td class="text-center">${today}</td>
+                            <td class="text-center">${item.IdEstado}</td>
                             <td class="text-center">
                                 <a href="/PDMHome/CheckListEditar/${item.IdParte}"> Actualizar </a>
                             </td>

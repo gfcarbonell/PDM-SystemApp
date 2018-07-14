@@ -160,6 +160,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Contexts\DBContextPDM.cs" />
     <Compile Include="Controllers\AuthUserController.cs" />
+    <Compile Include="Controllers\PDMAbastecimientoController.cs" />
     <Compile Include="Controllers\PDMLaborController.cs" />
     <Compile Include="Controllers\PDMActividadController.cs" />
     <Compile Include="Controllers\PDMConsumidorController.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Controllers\PDMImplementoController.cs" />
     <Compile Include="Controllers\PDMMaquinariaController.cs" />
     <Compile Include="Controllers\PDMParteDiarioController.cs" />
+    <Compile Include="Controllers\PDMParteDiarioMaquinariaController.cs" />
     <Compile Include="Controllers\PDMSistemaController.cs" />
     <Compile Include="Controllers\PDMSucursalController.cs" />
     <Compile Include="Controllers\PDMTipoImplementoController.cs" />
@@ -180,11 +182,15 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Controllers\PDMOperarioController.cs" />
+    <Compile Include="Models\PDM_PARTE_DIARIO_MAQUINARIA.cs" />
+    <Compile Include="Models\PDM_PARTE_MAQUINARIA.cs" />
+    <Compile Include="Models\PDM_ABASTECIMIENTO.cs" />
     <Compile Include="Models\PDM_ACCION.cs" />
     <Compile Include="Models\PDM_ACTIVIDAD.cs" />
     <Compile Include="Models\PDM_CHECKLIST.cs" />
     <Compile Include="Models\PDM_CHECKLIST_IMPLEMENTO.cs" />
     <Compile Include="Models\PDM_CHECKLIST_SISTEMA.cs" />
+    <Compile Include="Models\PDM_COMBUSTIBLE.cs" />
     <Compile Include="Models\PDM_COMPONENTE.cs" />
     <Compile Include="Models\PDM_CONSUMIDOR.cs" />
     <Compile Include="Models\PDM_ESTADO.cs" />
@@ -208,6 +214,7 @@
     <Compile Include="Models\PDM_LABOR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AUTH_USER_SERV.cs" />
+    <Compile Include="Services\IABASTECIMIENTO.cs" />
     <Compile Include="Services\IACCION.cs" />
     <Compile Include="Services\IACTIVIDAD.cs" />
     <Compile Include="Services\ICHECKLIST_IMPLEMENTO.cs" />
@@ -221,11 +228,14 @@
     <Compile Include="Services\IOBSERVACION.cs" />
     <Compile Include="Services\IOPERARIO.cs" />
     <Compile Include="Services\IPARTE_DIARIO.cs" />
+    <Compile Include="Services\IPARTE_MAQUINARIA.cs" />
     <Compile Include="Services\ISISTEMA.cs" />
     <Compile Include="Services\ISUCURSAL.cs" />
     <Compile Include="Services\ITIPO_IMPLEMENTO.cs" />
     <Compile Include="Services\ITURNO.cs" />
     <Compile Include="Services\IAUTHUSER.cs" />
+    <Compile Include="Services\PDM_PARTE_DIARIO_MAQUINARIA_SERV.cs" />
+    <Compile Include="Services\PDM_ABASTECIMIENTO_SERV.cs" />
     <Compile Include="Services\PDM_ACCION_SERV.cs" />
     <Compile Include="Services\PDM_ACTIVIDAD_SERV.cs" />
     <Compile Include="Services\PDM_CHECKLIST_IMPLEMENTO_SERV.cs" />
@@ -729,6 +739,10 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -782,6 +796,7 @@
     <Folder Include="Views\AuthUser\" />
     <Folder Include="Views\Estado\" />
     <Folder Include="Views\Labor\" />
+    <Folder Include="Views\PDMAbastecimiento\" />
     <Folder Include="Views\PDMAccion\" />
     <Folder Include="Views\PDMActividad\" />
     <Folder Include="Views\PDMCheckListImplemento\" />
@@ -790,6 +805,7 @@
     <Folder Include="Views\PDMImplemento\" />
     <Folder Include="Views\PDMMaquinaria\" />
     <Folder Include="Views\PDMOperario\" />
+    <Folder Include="Views\PDMParteDiarioMaquinaria\" />
     <Folder Include="Views\PDMParteDiario\" />
     <Folder Include="Views\PDMSucursal\" />
     <Folder Include="Views\PDMTurno\" />

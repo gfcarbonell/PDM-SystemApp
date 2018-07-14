@@ -389,19 +389,19 @@
                     response.data.map((item, index) => {
                         let table =
                             `
-                                        <table class="table table-hover systems" id="system-${item.IdSistema}" >
-                                            <thead class="thead-light text-white" id="systems-head">
-                                                <tr class="d-flex" id="systems-head-th">
-                                                    <th class="col-1 text-center font-weight-bold">#</th>
-                                                    <th class="col-5 text-left font-weight-bold">
-                                                        ${item.Descripcion}
-                                                    </th>
-                                                    <th class="col-2 text-center font-weight-bold">OK</th>
-                                                    <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                                    <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                                </tr>
-                                            </thead>
-                                        </table>`;
+                                <table class="table table-hover systems" id="system-${item.IdSistema}" >
+                                    <thead class="thead-light text-white" id="systems-head">
+                                        <tr class="d-flex" id="systems-head-th">
+                                            <th class="col-1 text-center font-weight-bold">#</th>
+                                            <th class="col-5 text-left font-weight-bold">
+                                                ${item.Descripcion}
+                                            </th>
+                                            <th class="col-2 text-center font-weight-bold">OK</th>
+                                            <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                            <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                        </tr>
+                                    </thead>
+                                </table>`;
                         $("#table-system").append(table);
                         //Observation
                         $("#table-system").append(`<div class="table  d-flex justify-content-between" id="observation-${item.IdSistema}"/>`);

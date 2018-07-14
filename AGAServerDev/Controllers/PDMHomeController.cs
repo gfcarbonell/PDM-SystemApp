@@ -42,6 +42,7 @@ namespace AGAServerDev.Controllers
             PDM_OBSERVACION_SERV obserServ = new PDM_OBSERVACION_SERV();
 
             var parte = parteServ.GetParteById(id);
+
             var IdCheck = Byte.Parse(id.ToString());
             var checkSistema = checkListSistemaServ.Get(IdCheck);
             var checkImplemento = checkListImplementoServ.Get(IdCheck, parte.IdTipoImplemento);

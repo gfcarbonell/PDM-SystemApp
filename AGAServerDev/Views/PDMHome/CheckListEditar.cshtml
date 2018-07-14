@@ -85,35 +85,19 @@
                         Actualizar
                     </button>
                 </div>
-
-                <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="reset-modal">
-                    <div class="modal-dialog modal-sm">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h6 class="modal-title" id="myModalLabel">Restablecer Valores:Confirmar</h6>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" id="modal-btn-si">Si</button>
-                                <button type="button" class="btn btn-primary" id="modal-btn-no">No</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </form>
         </div>
     </div>
     <div class="tab-pane fade" id="pills-part" role="tabpanel" aria-labelledby="pills-part-tab">
         <div class="container">
             <div class="margin-bottom-lg">
-                <h2 class="text-center ">Registro(s) de Parte Diario Maquinaria </h2>
+                <h2 class="text-center ">Registrar Parte Diario Maquinaria </h2>
             </div>
-            <form role="form" data-toggle="validator" id="form-daily-parte">
+            <form role="form" data-toggle="validator" id="form-add-item-part-daily">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="headquarters">Consumidor</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="consumer" name="consumer" data-size="10" required>
-                        </select>
+                        <select class="form-control selectpicker" data-live-search="true" id="consumer" name="consumer" data-size="10" required></select>
                         <p class="text-danger" id="error-consumer"></p>
                     </div>
                 </div>
@@ -121,15 +105,15 @@
                     <div class="form-group col-sm-12 col-md-6">
                         <div class="form-row">
                             <div class="form-group col-sm-6 col-md-6">
-                                <label for="start-date">Fecha Inicio</label>
-                                <input class="form-control" type="date" name="start-date" id="start-date" required />
+                                <label for="star-date">Fecha Inicio</label>
+                                <input class="form-control" type="date" name="star-date" id="star-date"  disabled required />
                             </div>
                             <div class="form-group col-sm-6 col-md-6">
-                                <label for="start-time">Hora Inicio</label>
-                                <input class="form-control" type="time" name="start-time" id="start-time" required />
+                                <label for="star-time">Hora Inicio</label>
+                                <input class="form-control" type="time" name="star-time" id="star-time" required />
                             </div>
                         </div>
-                        <p class="text-danger" id="error-start-datetime"></p>
+                        <p class="text-danger" id="error-star-datetime"></p>
                     </div>
                     <div class="form-group col-sm-12 col-md-6">
                         <div class="form-row">
@@ -155,7 +139,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="work">Labor</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="work" name="work" data-size="10" required>
+                        <select class="form-control selectpicker" data-live-search="true" id="work" name="work" data-size="10" required disabled>
                             <option data-tokens="000" value="000">---</option>
                         </select>
                         <p class="text-danger" id="error-work"></p>
@@ -163,69 +147,53 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-sm-6 col-md-6">
-                        <label for="start-horometer">Horómetro Inicial</label>
-                        <input class="form-control" type="number" step="0.01" value=0.00 min="0" name="start-horometer" id="start-horometer" required />
-                        <p class="text-danger" id="error-start-horometer"></p>
+                        <label for="star-horometer">Horómetro Inicial</label>
+                        <input class="form-control" type="number" step="0.01" min="0.01" value=0.00 name="star-horometer" id="star-horometer" required />
+                        <p class="text-danger" id="error-star-horometer"></p>
                     </div>
                     <div class="form-group col-sm-6 col-md-6">
-                        <label for="end-horometer">Horómetro Inicial</label>
-                        <input class="form-control" type="number" step="0.01" value=0.00 min="0" name="end-horometer" id="end-horometer" required />
+                        <label for="end-horometer">Horómetro Final</label>
+                        <input class="form-control" type="number" step="0.01" min="0.01" value=0.00  name="end-horometer" id="end-horometer" required />
                         <p class="text-danger" id="error-end-horometer"></p>
                     </div>
                 </div>
                 <div class="form-row justify-content-center">
-                    <button type="submit" id="send-part-daily" class="btn btn-success">
-                        Agregar 
+                    <button type="submit" id="add-part-daily" class="btn btn-success">
+                        Agregar al listado de parte diario
                     </button>
                 </div>
             </form>
             <br />
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Consumidor</th>
-                        <th scope="col">Hora Inicio</th>
-                        <th scope="col">Hora Final</th>
-                        <th scope="col">Actividad</th>
-                        <th scope="col">Labor</th>
-                        <th scope="col">Htr. Inicial</th>
-                        <th scope="col">Htr. Final</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
-                        <td>mdo</td>
-                    </tr>
-                </tbody>
-            </table>
+            <br />
+            <div class="margin-bottom-lg">
+                <h4 class="text-left ">Listado:Parte Diario Maquinaria </h4>
+            </div>
+            <form action="/" method="post" id="form-add-daily-part">
+                <div class="form-row table-responsive">
+                    <table class="table table-hover" id="table-part-daily">
+                        <thead class="thead-light text-white">
+                            <tr class="d-flex">
+                                <th class="col-1 text-center font-weight-bold">#</th>
+                                <th class="col-3 text-left font-weight-bold">Consumidor</th>
+                                <th class="col-1 text-center font-weight-bold">Hora Inicio</th>
+                                <th class="col-1 text-center font-weight-bold">Hora Final</th>
+                                <th class="col-2 text-left font-weight-bold">Actividad</th>
+                                <th class="col-2 text-left font-weight-bold">Labor</th>
+                                <th class="col-1 text-center font-weight-bold">Htro. Inicial</th>
+                                <th class="col-1 text-center font-weight-bold">Htro. Final</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-part-daily-body"></tbody>
+                    </table>
+                </div>
+                <div class="form-row justify-content-center">
+                    <button type="submit" class="btn btn-danger">
+                        Guardar parte diario del día
+                    </button>
+                </div>
+            </form>
+
+
         </div>
     </div>
     <div class="tab-pane fade" id="pills-fuel" role="tabpanel" aria-labelledby="pills-fuel-tab">
@@ -233,24 +201,33 @@
             <div class="margin-bottom-lg">
                 <h2 class="text-center "> Abastecimiento de Combustible </h2>
             </div>
-            <form role="form" data-toggle="validator" id="form-daily-parte">
-                <ul id="form-row">
-                    <li class="form-row">
-                        <div class="form-group col-sm-6 col-md-6">
+            <form role="form" data-toggle="validator" id="form-add-fuel-daily-parte">
+                <ul class="list-group fuel-items" id="fuel-items">
+                    <li class="form-row fuel-items-item" id="fuel-item-1">
+                        <div class="form-group col-sm-6 col-md-6 fuel-items-item-fuel">
                             <label for="fuel-1">Combustible-1</label>
-                            <input class="form-control" type="number" step="0.01" min="0" name="fuel-1" id="fuel-1" />
+                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-1" id="fuel-1" value="0.00" required/>
                             <p class="text-danger" id="error-fuel-1"></p>
                         </div>
-                        <div class="form-group col-sm-6 col-md-6">
+                        <div class="form-group col-sm-6 col-md-6 fuel-items-item-horometer">
                             <label for="fuel-horometer-1">Horómetro-1</label>
-                            <input class="form-control" type="number" step="0.01" min="0" name="fuel-horometer-1" id="fuel-horometer-1" />
-                            <p class="text-danger" id="error-end-horometer"></p>
+                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-1" id="fuel-horometer-1" value="0.00" required/>
+                            <p class="text-danger" id="error-end-horometer-1"></p>
                         </div>
                     </li>
                 </ul>
-                <div class="form-row justify-content-md-end">
-                    <button type="submit" id="add-fuel" class="btn btn-success">
+                <div class="d-flex justify-content-between">
+                    <a href="/" class="text-left" id="remove-extra-fuel">
+                        Remover combustible extra
+                    </a>
+                    <a href="/" class="text-right" id="extra-fuel">
                         Agregar combustible extra
+                    </a>
+                </div>
+                <br />
+                <div class="form-row justify-content-center">
+                    <button type="submit" id="add-fuel" class="btn btn-success">
+                        Guardar Abastecimiento
                     </button>
                 </div>
             </form>
@@ -259,34 +236,18 @@
 </div>
 
 @section scripts {
-<script src="~/Scripts/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript">
+
     $(() => {
-            let modalResetConfirm = function(callback) {
 
-            $("#reset-check-list").on("click", function () {
-                $("#reset-modal").modal('show');
-            });
+        
+        let data = localStorage.getItem("data");
+        const user = JSON.parse(data);
 
-            $("#modal-btn-si").on("click", function () {
-                callback(true);
-                $("#reset-modal").modal('hide');
-            });
-
-            $("#modal-btn-no").on("click", function () {
-                callback(false);
-                $("#reset-modal").modal('hide');
-            });
-        };
-
-
-        modalResetConfirm((confirm) => {
-            if (confirm) {
-                //Acciones si el usuario confirma
-                location.reload();
-            }
-        });
-
+        if (!user) {
+            let url = $("#RedirectToLogin").val(); location.href = url;
+        }
+        else {
 
         //GET -> Controller:Sede/Index
         //Inicializars Sede
@@ -302,17 +263,26 @@
         var checkListImplementoDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["checkImplemento"])));
         var observacionesDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["observaciones"])));
 
-        //Fecha Actual
-        var now = new Date(FechaDefault);
+        //Fecha Actual - change Format dd-mm-yyyy to yyyy-mm-dd
+        var oldFormat = FechaDefault.split(" ")[0]
+        var convert = oldFormat.split("/")
+        var newFormat = convert[2] + "-" + convert[1] + "-" + convert[0] 
+        //String to Date
+        var now = new Date(newFormat);
         var day = ("0" + now.getDate()).slice(-2);
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
         var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
+        //CheckList
         $(`#date`).val(today);
+        //Daily Part
+        $(`#star-date`).val(today);
+        $(`#star-time`).val("00:00");
+        $(`#end-date`).val(today);
+        $(`#end-time`).val("00:00");
+        
 
         //GET -> Controller:PDMEstado/Index
         //Inicializar Turno
-
         axios.get(`${URL}/PDMEstado/`, {
             headers: {
                 'Accept': 'application/json',
@@ -329,7 +299,6 @@
         .catch(error => {
             console.log(error);
         });
-
 
         //GET -> Controller:PDMTurno/Index
         //Inicializar Turno
@@ -614,7 +583,7 @@
                 console.log(error);
             });
         });
-
+        
         //Inicializar Sede
         $('#headquarters').on('loaded.bs.select', (e) => {
             axios.get(`${URL}/PDMSucursal/`, {
@@ -760,7 +729,7 @@
                 console.log(error);
             });
         });
-
+        
         //Change -> Activity
         $('#activity').on('changed.bs.select	', (e) => {
             const IdActividad = e.currentTarget.value ? e.currentTarget.value : "002";
@@ -778,6 +747,7 @@
                 }
             })
                 .then(response => {
+                    
                     $(`#work`).empty();
                     if (response.data.length > 0) {
                         response.data.map((item, index) => {
@@ -791,7 +761,7 @@
                         $("#work").prop('disabled', true);
                         $(`#work`).selectpicker('refresh');
                     }
-
+                    
                 })
                 .catch(error => {
                     console.log(error);
@@ -1081,7 +1051,7 @@
                                     <tr class="d-flex components" id="component-${parte.IdComponente}">
                                         <td class="col-1 text-center">${indice}</td>
                                         <td class="col-5 text-left">${parte.Componente}</td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" checked value=0 name=${parte.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" checked required value=0 name=${parte.IdComponente}></td>
                                         <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
                                         <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
                                     </tr>
@@ -1249,9 +1219,71 @@
             console.log(error);
         });
 
+        let dataPDM = JSON.stringify({
+            IdParte: IdParteDefault,
+        })
+        //Get Part Daily Machenery 
+        axios.get(`${URL}/PDMParteDiarioMaquinaria/Index`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }, 
+            params: {
+                IdParte: JSON.parse(dataPDM).IdParte
+            }
+        })
+        .then(response => {
+            console.log(response.data)
+            response.data.map((pdm, index) => {
+                let tr = `
+                <tr class="d-flex part-items pdm-${pdm.IdParteDiario}" id="daily-item-${pdm.IdParte}">
+                    <td class="col-1 text-center">${index + 1}</th>
+                    <td class="col-3 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdParte}</td>
+                    <td class="col-1 part-items-star-time text-center"> ------ </td>
+                    <td class="col-1 part-items-end-time text-center"> ------ </td>
+                    <td class="col-2 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
+                    <td class="col-2 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
+                    <td class="col-1 part-items-star-horometer text-center">${pdm.HorometroInicio}</td>
+                    <td class="col-1 part-items-end-horometer text-center">${pdm.HorometroFinal}</td>  
+                </tr>
+                 `
+                $(`#table-part-daily-body`).append(tr);
+            })
+        })
+        .catch(error => {
+            console.log(error);
+        });
+   
 
+        //Remove Fuel
+        $(`#remove-extra-fuel`).click(event => {
+            event.preventDefault();
+            $(`#fuel-items>li:last`).remove();
+        })
 
-        //Submit
+        //Add Fuel
+        $(`#extra-fuel`).on("click", (event) => {
+            event.preventDefault();
+            let fuels = $(`#fuel-items`).children().length;
+        
+            let fuel = `
+                <li class="form-row fuel-items-item" id="fuel-item-${fuels + 1}">
+                    <div class="form-group col-sm-6 col-md-6 fuel-items-item-fuel">
+                        <label for="fuel-${fuels + 1}">Combustible-${fuels + 1}</label>
+                        <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-${fuels + 1}" id="fuel-${fuels + 1}" required value="0.00"/>
+                        <p class="text-danger" id="error-fuel-${fuels + 1}"></p>
+                    </div>
+                    <div class="form-group col-sm-6 col-md-6 fuel-items-item-horometer">
+                        <label for="fuel-horometer-${fuels + 1}">Horómetro-${fuels + 1}</label>
+                        <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-${fuels + 1}" id="fuel-horometer-${fuels + 1}" required value="0.00"/>
+                        <p class="text-danger" id="error-end-horometer-${fuels + 1}"></p>
+                    </div>
+                </li>
+            `
+            $(`#fuel-items`).append(fuel);
+        });
+            
+        //Submit Update CheckList
         $(`#form-list`).submit((event) => {
             event.preventDefault();
             //Headquarters
@@ -1358,7 +1390,7 @@
                 })
             })
 
-            observationsDefaultData=[{
+            observationsDefaultData = [{
                 IdParte: 0,
                 IdSistema: "00",
                 IdObservacion: 0,
@@ -1405,13 +1437,278 @@
                     // options
                     message: `Error al Actualizar!`
                 },
-                {
+                    {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+            })
+        });
+        //Submit Add Item Daily
+        $(`#form-add-item-part-daily`).submit((event) => {
+                event.preventDefault();
+                //Consumer
+                if ($(`#consumer`).val() === '000' || $(`#consumer`).val() === "" || $(`#consumer`).val() === undefined) {
+                    $(`#error-consumer`).text("Debe seleccionar un consumidor.");
+                    $.notify({
+                        // options
+                        message: 'Debe seleccionar un consumidor.'
+                    }, {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
+                    throw "Select consumer";
+                } else {
+                    $(`#error-consumer`).empty();
+                }
+
+                //Comparation time
+                if ($("#star-time").val() >= $("#end-time").val()) {
+                    $(`#error-star-datetime`).text("La hora inicial no debe ser mayor o igual a la hora final");
+                    $(`#error-end-datetime`).text("La hora final no debe ser menor o igual a la hora inicial");
+                    $.notify({
+                        // options
+                        message: 'Error de tiempos'
+                    }, {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
+                    throw "Select star-datetime";
+                } else {
+                    $(`#error-star-datetime`).empty();
+                    $(`#error-end-datetime`).empty();
+                }
+
+                //Activity
+                if ($(`#activity`).val() === '000') {
+                    $(`#error-activity`).text("Debe seleccionar una actividad.");
+                    $.notify({
+                        // options
+                        message: 'Debe seleccionar una actividad.'
+                    }, {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
+                    throw "Select activity";
+                } else {
+                    $(`#error-activity`).empty();
+                }
+
+                //Comparation Horometer 
+                if ($(`#star-horometer`).val() >= $(`#end-horometer`).val()) {
+                    $(`#error-star-horometer`).text("El horométro inicial no debe ser mayor o igual al horométro final.");
+                    $(`#error-end-horometer`).text("El horométro final no debe ser mayor o igual al horométro inicial.");
+
+                    $.notify({
+                        // options
+                        message: 'Error de horométros'
+                    }, {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
+                    throw "Select horometers";
+                }
+                else {
+                    $(`#error-star-horometer`).empty();
+                    $(`#error-end-horometer`).empty();
+                }
+
+                //DateTime
+                let statDay = `${$("#star-date").val()}T${$("#star-time").val()}`;
+                let endDay = `${$("#end-date").val()}T${$("#end-time").val()}`;
+
+                let consumerDescription = $("#consumer option").filter(function () {
+                    return $.trim($(this).val()) == $(`#consumer`).val()
+                }).prop('selected', true).text().trim();
+
+                let activityDescription = $("#activity option").filter(function () {
+                    return $.trim($(this).val()) == $(`#activity`).val()
+                }).prop('selected', true).text().trim();
+
+                let workDescription = $("#work option").filter(function () {
+                    return $.trim($(this).val()) == $(`#work`).val()
+                }).prop('selected', true).text().trim();
+
+                let data = {
+
+                    Consumidor: {
+                        IdConsumidor: $(`#consumer`).val(),
+                        Descripcion: consumerDescription
+                    },
+                    HoraInicio: $("#star-time").val(),
+                    HoraFinal: $("#end-time").val(),
+                    Actividad: {
+                        IdActividad: $(`#activity`).val(),
+                        Descripcion: activityDescription,
+                    },
+                    Labor: {
+                        IdLabor: $(`#work`).val(),
+                        Descripcion: workDescription
+                    },
+                    HorometroInicio: parseFloat($(`#star-horometer`).val()),
+                    HorometroFinal: parseFloat($(`#end-horometer`).val()),
+                }
+
+                let countItem = $(`#table-part-daily-body`).children().length;
+
+                let tr = `
+                <tr class="d-flex part-items pdm-0" id="daily-item-${countItem + 1}">
+                    <td class="col-1 text-center">${countItem + 1}</th>
+                    <td class="col-3 part-items-consumer text-left" id=${data.Consumidor.IdConsumidor}>${data.Consumidor.Descripcion}</td>
+                    <td class="col-1 part-items-star-time text-center" id=${statDay}> ${data.HoraInicio}</td>
+                    <td class="col-1 part-items-end-time text-center" id=${endDay}>${data.HoraFinal}</td>
+                    <td class="col-2 part-items-activity text-left" id=${data.Actividad.IdActividad}>${data.Actividad.Descripcion}</td>
+                    <td class="col-2 part-items-work text-left" id=${data.Labor.IdLabor}>${data.Labor.Descripcion}</td>
+                    <td class="col-1 part-items-star-horometer text-center">${data.HorometroInicio}</td>
+                    <td class="col-1 part-items-end-horometer text-center">${data.HorometroFinal}</td>  
+                </tr>
+                 `
+                $(`#table-part-daily-body`).append(tr);
+
+                //Refresh Item
+                $("#consumer").val('default');
+                $("#consumer").selectpicker({ title: "Elige un nuevo consumidor." });
+                $("#consumer").selectpicker("refresh");
+
+                $("#activity").selectpicker({ title: "Elige un nueva actividad." });
+                $("#activity").val('default');
+                $("#activity").selectpicker("refresh");
+
+                $("#work").attr("disabled", true)
+                $("#work").selectpicker({ title: "Elige un nueva labor." });
+                $("#work").val('default');
+                $("#work").selectpicker("refresh");
+
+                $(`#star-time`).val("00:00");
+                $(`#end-time`).val("00:00");
+                $(`#star-horometer`).val("0.00");
+                $(`#end-horometer`).val("0.00");
+            })
+        //Submit Add Server Daily
+        $(`#form-add-daily-part`).submit((event) => {
+            event.preventDefault();
+            let fuelsitem = $(`#table-part-daily-body`).children().length;
+            if (fuelsitem === 0) {
+                $.notify({
+                    // options
+                    message: 'No existe ningun registro.'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select register daily";
+            }
+
+            let dailies = new Array();
+            $(".part-items").each(function () {
+                let partDataDaily = {
+                    IdConsumidor: $(this).children(".part-items-consumer").attr("id"), 
+                    IdActividad: $(this).children(".part-items-activity").attr("id"), 
+                    IdLabor: $(this).children(".part-items-work").attr("id"),
+                    HoraInicio: $(this).children(".part-items-star-time").attr("id"), 
+                    HoraFin: $(this).children(".part-items-end-time").attr("id"),
+                    HorometroInicio: parseFloat($(this).children(".part-items-star-horometer").text()),
+                    HorometroFinal: parseFloat($(this).children(".part-items-end-horometer").text())
+                }
+                dailies.push(partDataDaily);
+            })
+
+            let PDM_PARTE_DIARIO_MAQUINARIA = JSON.stringify({
+                IdParte: IdParteDefault,
+                TablaDiario: dailies,
+                IdUsuario: user.CodUsuario
+            })
+
+            axios.post(`${URL}/PDMParteDiarioMaquinaria/Agregar`, PDM_PARTE_DIARIO_MAQUINARIA, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                console.log(response.data);
+                $.notify({
+                    // options
+                    message: 'Exito al Parte Diario Maquinaria.'
+                }, {
+                    // settings
+                    type: 'success',
+                    delay: 100,
+                });
+            }).catch(error => {
+                console.log(error)
+                $.notify({
+                    // options
+                    message: 'Error al Parte Diario Maquinaria.'
+                },{
                     // settings
                     type: 'danger',
                     delay: 100,
                 });
             })
+        });
+
+        //submit Fueling
+        $(`#form-add-fuel-daily-parte`).submit((event) => {
+            event.preventDefault();
+            let fuelsitem = $(`#fuel-items`).children().length;
+
+            if (fuelsitem === 0) {
+                $.notify({
+                    // options
+                    message: 'No existe abastecimiento.'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select fuels";
+            }
+
+            let fuels = new Array();
+            $(".fuel-items-item").each(function () {
+                let fuel = $(this).children(".fuel-items-item-fuel").children("input").val();
+                let horometer = $(this).children(".fuel-items-item-horometer").children("input").val();
+                fuels.push({ IdCombustible: 0, Galones: parseFloat(fuel), horometro: parseFloat(horometer) });
+            })
+
+            let PDM_ABASTECIMIENTO = JSON.stringify({
+                IdParte: IdParteDefault,
+                IdUsuario: user.CodUsuario, 
+                TablaCombustible: fuels 
+            })
+
+            axios.post(`${URL}/PDMAbastecimiento/Agregar`, PDM_ABASTECIMIENTO, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }).then(response => {
+                $.notify({
+                    // options
+                    message: 'Exito al guardar Abastecmiento.'
+                }, {
+                        // settings
+                        type: 'success',
+                        delay: 100,
+                });
+            }).catch(error => {
+                console.log(error)
+                $.notify({
+                    // options
+                    message: 'Error al guardar Abastecmiento.'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                });
+            })
         })
+        }
     })
 </script>
 }
