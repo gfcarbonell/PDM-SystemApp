@@ -69,7 +69,7 @@ namespace AGAServerDev.Services
             }
         }
 
-        public ICollection<PDM_PARTE_EXT> Get(DateTime Fecha, int IdUsuario)
+        public ICollection<PDM_PARTE_EXT> Get(DateTime Fecha, int IdUsuario, string IdSucursal)
         {
             using (DBContextPDM db = new DBContextPDM())
             {
@@ -79,7 +79,7 @@ namespace AGAServerDev.Services
                     {
                         var FechaParameter = new SqlParameter();
                         var IdUsuarioParameter = new SqlParameter();
-
+                        var IdSucursalParameter = new SqlParameter();
 
                         FechaParameter.ParameterName = "@Fecha";
                         FechaParameter.Direction = ParameterDirection.Input;
@@ -90,6 +90,11 @@ namespace AGAServerDev.Services
                         IdUsuarioParameter.Direction = ParameterDirection.Input;
                         IdUsuarioParameter.SqlDbType = SqlDbType.SmallInt;
                         IdUsuarioParameter.Value = IdUsuario;
+
+                        IdSucursalParameter.ParameterName = "@IdSucursal";
+                        IdSucursalParameter.Direction = ParameterDirection.Input;
+                        IdSucursalParameter.SqlDbType = SqlDbType.VarChar;
+                        IdSucursalParameter.Value = IdSucursal;
 
                         var parteDiarios = db.Database.SqlQuery<PDM_PARTE_EXT>("dbo.[PR_PDM_PARTE_QRY_Diario] @Fecha", 
                             FechaParameter)
@@ -102,7 +107,6 @@ namespace AGAServerDev.Services
                                 IdTipoImplemento = t.IdTipoImplemento,
                                 IdMaquinaria = t.IdMaquinaria,
                                 IdOperario = t.IdOperario, 
-                               
                                 IdEstado = t.IdEstado,
                                 IdTurno = t.IdTurno
                             }).ToList();

@@ -19,5 +19,6 @@ namespace AGAServerDev.Controllers
 
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+        
     }
 }

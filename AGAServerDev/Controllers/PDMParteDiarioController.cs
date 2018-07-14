@@ -34,10 +34,10 @@ namespace AGAServerDev.Controllers
         }
 
         [HttpGet]
-        public JsonResult Todos (DateTime Fecha, int IdUsuario)
+        public JsonResult Todos (DateTime Fecha, int IdUsuario, string IdSucursal)
         {
             PDM_PARTE_DIARIO_SERV serv = new PDM_PARTE_DIARIO_SERV();
-            var objs = serv.Get(Fecha, IdUsuario);
+            var objs = serv.Get(Fecha, IdUsuario, IdSucursal);
             return Json(objs, JsonRequestBehavior.AllowGet);
         }
 

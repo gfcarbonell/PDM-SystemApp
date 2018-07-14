@@ -35,7 +35,54 @@ namespace AGAServerDev.Services
         {
             throw new NotImplementedException();
         }
-       
+        
+        public ICollection<AUTH_USER> GetUserProfile(string IdModulo)
+        {
+            using (DBContextPDM db = new DBContextPDM())
+            {
+                using (var ctxTrans = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        
+                        var IdModuloParameter = new SqlParameter();
+                        IdModuloParameter.ParameterName = "@IdModulo";
+                        IdModuloParameter.Direction = ParameterDirection.Input;
+                        IdModuloParameter.SqlDbType = SqlDbType.VarChar;
+                        IdModuloParameter.Value = IdModulo;
+
+                        var usuarios = db.Database.SqlQuery<AUTH_USER>("[dbo].[PR_PDM_PERFIL_USUARIO_QRY] @IdModulo",
+                            IdModuloParameter
+                            ).ToList();
+
+                        ctxTrans.Commit(); // OK
+                        return usuarios;
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+                    catch (NullReferenceException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (SqlException ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        ctxTrans.Rollback(); // ERROR
+                        throw ex;
+                    }
+                }
+            }
+        }
         public int Permisos(AUTH_USER auth_user)
         {
             using (DBContextPDM db = new DBContextPDM())

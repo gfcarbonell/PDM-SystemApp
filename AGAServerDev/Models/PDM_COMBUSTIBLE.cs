@@ -8,7 +8,7 @@ namespace AGAServerDev.Models
     public class PDM_COMBUSTIBLE
     {
         public int IdCombustible { get; set; }
-        public double Galones { get; set; }
-        public double Horometro { get; set; }
+        public Decimal Galones { get; set; }
+        public Decimal Horometro { get; set; }
     }
 }

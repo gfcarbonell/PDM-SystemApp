@@ -621,7 +621,7 @@
                 }]
 
                 const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData
-
+                console.log(user)
                 //Get Values - Main Head
                 let PDM_PARTE_DIARIO = JSON.stringify({
                     IdSucursal: $("#headquarters").val(),
@@ -629,12 +629,11 @@
                     IdImplemento: $("#implement").val(),
                     IdTipoImplemento: $("#implementType").val(),
                     Fecha: $("#date").val(),
-                    IdOperario: $("#operator").val() | "010129".toString(),
+                    IdOperario: $("#operator").val() | "010129",
                     IdTurno: $("#turn").val(),
-                    UsuarioCreacion: 1,
-                    PDM_CHECKLIST: checkListData,
-                    PDM_OBSERVACION: obrData,
-                    IdUsuario: user.CodUsuario
+                    IdUsuario: user.CodUsuario,
+                    PDM_CHECKLIST: checkListData ,
+                    PDM_OBSERVACION: obrData
                 });
 
                 console.log(PDM_PARTE_DIARIO);

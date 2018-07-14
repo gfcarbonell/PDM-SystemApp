@@ -4,9 +4,10 @@
 <div class="margin-bottom-lg">
     <h2 class="text-center ">Registro(s) de CheckList del dia </h2>
 </div>
+<br />
 <div class="table-responsive">
     <table class="table table-hover " id="check-lists">
-        <thead>
+        <thead class="thead-light text-white">
             <tr>
                 <th scope="col" class="text-center">#</th>
                 <th scope="col" class="text-center">Sucursal</th>
@@ -17,22 +18,69 @@
                 <th scope="col" class="text-center">Turno</th>
                 <th scope="col" class="text-center">Fecha</th>
                 <th scope="col" class="text-center">Estado</th>
-                <th scope="col" class="text-center">Editar</th>
+                <th scope="col" class="text-center">Check</th>
             </tr>
         </thead>
         <tbody id="tbody-daily"></tbody>
     </table>
 </div>
+<br />
+<figure class="form-row d-flex justify-content-center align-items-center bg-light" id="table-image-list">
+    <img src="~/Medias/png/Register.png" width="150" class="img-fluid rounded" />
+    <figcaption>
+        <h4>
+            No exite ningún registro.
+        </h4>
+    </figcaption>
+</figure>
+<div class="ok">
+    <button id="send"> enviar </button>
+</div>
 @Html.Hidden("RedirectToLogin", Url.Action("Login", "PDMHome"));
+<script src="~/Scripts/utils/push.min.js"></script>
+
 @section scripts {
 
     <script type="text/javascript">
         $(() => {
+
+            var notifyProxy = $.connection.notifyHub;
+
+            notifyProxy.client.notifyPush = function (name, message) {
+                let x = `<p>${name}</p>`;
+
+                $(".ok").append(x)
+                Push.Permission.DEFAULT; 
+                Push.create("Hello world!", {
+                    body: "How's it hangin'?",
+                    timeout: 4000,
+                    onClick: function () {
+                        window.focus();
+                        this.close();
+                    }
+                });
+            }
+
+
+            $.connection.hub.start().done(function () {
+                $(`#send`).click((event) => {
+                    //Server 
+                    notifyProxy.server.sendMessage("Hola", "World");
+                })
+            });
+
+
+
+
+
+
+
+
             /// Get Date now
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
-            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            var today = now.getFullYear() + "/" + (month) + "/" + (day);
 
             let userData = localStorage.getItem("data");
             const user = JSON.parse(userData);
@@ -43,9 +91,10 @@
 
             const data = JSON.stringify({
                 Fecha: today,
-                IdUsuario: user.CodUsuario
+                IdUsuario: user.CodUsuario,
+                IdSucursal: user.CodSucursal
             });
-
+            console.log(data);
             //Get Part Daily
             axios.get(`${URL}/PDMParteDiario/Todos`, {
                 headers: {
@@ -54,43 +103,49 @@
                 },
                 params: {
                     Fecha: JSON.parse(data).Fecha,
-                    IdUsuario: JSON.parse(data).IdUsuario
+                    IdUsuario: JSON.parse(data).IdUsuario,
+                    IdSucursal: JSON.parse(data).IdSucursal,
                 }
-            })
-            .then(response => {
-                if (response.data) {
-                    response.data.map((item, index) => {
-                        let jsonDate = item.Fecha;  // returns "/Date(1245398693390)/";
-                        let re = /-?\d+/;
-                        let m = re.exec(jsonDate);
-                        let d = new Date(parseInt(m[0]));
-                        let day = ("0" + d.getDate()).slice(-2);
-                        let month = ("0" + (d.getMonth() + 1)).slice(-2);
-                        let today = (day) + "-" + (month) + "-" + d.getFullYear(); // Format dd/mm/yyyy
+                })
+                .then(response => {
+                    console.log(response.data);
+                    if (response.data) {
+                        $("#table-image-list").empty();
+                        response.data.map((item, index) => {
+                            let jsonDate = item.Fecha;  // returns "/Date(1245398693390)/";
+                            let re = /-?\d+/;
+                            let m = re.exec(jsonDate);
+                            let d = new Date(parseInt(m[0]));
+                            let day = ("0" + d.getDate()).slice(-2);
+                            let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                            let today = (day) + "/" + (month) + "/" + d.getFullYear(); // Format dd/mm/yyyy
 
-                        let tr = `
-                            <tr>
-                            <td class="text-center" scope="row">${index + 1}</th>
-                            <td class="text-center">${item.IdSucursal}</td>
-                            <td class="text-center">${item.IdMaquinaria}</td>
-                            <td class="text-center">${item.IdTipoImplemento}</td>
-                            <td class="text-center">${item.IdImplemento}</td>
-                            <td class="text-center">${item.IdOperario}</td>
-                            <td class="text-center">${item.IdTurno}</td>
-                            <td class="text-center">${today}</td>
-                            <td class="text-center">${item.IdEstado}</td>
-                            <td class="text-center">
-                                <a href="/PDMHome/CheckListEditar/${item.IdParte}"> Actualizar </a>
-                            </td>
-                        </tr>
-                        `
-                        $(`#tbody-daily`).append(tr);
-                    })
-                }
+                            let tr = `
+                                <tr>
+                                <td class="text-center" scope="row">${index + 1}</th>
+                                <td class="text-center">${item.IdSucursal}</td>
+                                <td class="text-center">${item.IdMaquinaria}</td>
+                                <td class="text-center">${item.IdTipoImplemento}</td>
+                                <td class="text-center">${item.IdImplemento}</td>
+                                <td class="text-center">${item.IdOperario}</td>
+                                <td class="text-center">${item.IdTurno}</td>
+                                <td class="text-center">${today}</td>
+                                <td class="text-center">${item.IdEstado}</td>
+                                <td class="text-center">
+                                    <a href="/PDMHome/CheckListEditar/${item.IdParte}"> Mitigar </a>
+                                </td>
+                            </tr>
+                            `
+                            $(`#tbody-daily`).append(tr);
+                        })
+                    }
+                    else {
 
-            })
-            .catch(error => {
-                console.log(error);
+                    }
+
+                })
+                .catch(error => {
+                    console.log(error);
                 });
         })
     </script>

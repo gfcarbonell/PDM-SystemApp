@@ -186,6 +186,15 @@
                         <tbody id="table-part-daily-body"></tbody>
                     </table>
                 </div>
+                <figure class="form-row d-flex justify-content-center align-items-center bg-light" id="pdm-image-list">
+                    <img src="~/Medias/png/Register.png" width="150" class="img-fluid rounded" />
+                    <figcaption>
+                        <h4>
+                            No exite ningún registro.
+                        </h4>
+                    </figcaption> 
+                </figure>
+                
                 <div class="form-row justify-content-center">
                     <button type="submit" class="btn btn-danger">
                         Guardar parte diario del día
@@ -202,16 +211,20 @@
                 <h2 class="text-center "> Abastecimiento de Combustible </h2>
             </div>
             <form role="form" data-toggle="validator" id="form-add-fuel-daily-parte">
+                <ul class="list-group fuel-items-save" id="fuel-items-save"></ul>
+                <div class="margin-bottom-lg">
+                    <h5 class="text-left "> Abastecimiento Extra </h5>
+                </div>
                 <ul class="list-group fuel-items" id="fuel-items">
                     <li class="form-row fuel-items-item" id="fuel-item-1">
                         <div class="form-group col-sm-6 col-md-6 fuel-items-item-fuel">
                             <label for="fuel-1">Combustible-1</label>
-                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-1" id="fuel-1" value="0.00" required/>
+                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-1" id="fuel-1" value="0.00" required />
                             <p class="text-danger" id="error-fuel-1"></p>
                         </div>
                         <div class="form-group col-sm-6 col-md-6 fuel-items-item-horometer">
                             <label for="fuel-horometer-1">Horómetro-1</label>
-                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-1" id="fuel-horometer-1" value="0.00" required/>
+                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-1" id="fuel-horometer-1" value="0.00" required />
                             <p class="text-danger" id="error-end-horometer-1"></p>
                         </div>
                     </li>
@@ -1219,9 +1232,46 @@
             console.log(error);
         });
 
+        //PDM Data
         let dataPDM = JSON.stringify({
             IdParte: IdParteDefault,
         })
+
+        //Get Part Daily Machenery 
+        axios.get(`${URL}/PDMCombustible/Index`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            params: {
+                IdParte: JSON.parse(dataPDM).IdParte
+            }
+        })
+        .then(response => {
+            if (response.data.length > 0) {
+                response.data.map((item, index) => {
+                    let li = `
+                        <li class="form-row" id="fuel-item-${item.IdCombustible}">
+                            <div class="form-group col-sm-6 col-md-6 fuel-items-item-fuel">
+                                <label for="fuel-${item.IdCombustible}">Combustible-${index+1}</label>
+                                <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-${item.IdCombustible}" id="fuel-${item.IdCombustible}" value=${item.Galones} required disabled/>
+                                <p class="text-danger" id="error-fuel-${item.IdCombustible}"></p>
+                            </div>
+                            <div class="form-group col-sm-6 col-md-6 fuel-items-item-horometer">
+                                <label for="fuel-horometer-${item.IdCombustible}">Horómetro-${index + 1}</label>
+                                <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-${item.IdCombustible}" id="fuel-horometer-${item.IdCombustible}" value=${item.Horometro} required disabled/>
+                                <p class="text-danger" id="error-end-horometer-${item.IdCombustible}"></p>
+                            </div>
+                        </li>
+                    `
+                    $(`#fuel-items-save`).append(li);
+                })
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
         //Get Part Daily Machenery 
         axios.get(`${URL}/PDMParteDiarioMaquinaria/Index`, {
             headers: {
@@ -1232,24 +1282,29 @@
                 IdParte: JSON.parse(dataPDM).IdParte
             }
         })
-        .then(response => {
-            console.log(response.data)
-            response.data.map((pdm, index) => {
-                let tr = `
-                <tr class="d-flex part-items pdm-${pdm.IdParteDiario}" id="daily-item-${pdm.IdParte}">
-                    <td class="col-1 text-center">${index + 1}</th>
-                    <td class="col-3 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdParte}</td>
-                    <td class="col-1 part-items-star-time text-center"> ------ </td>
-                    <td class="col-1 part-items-end-time text-center"> ------ </td>
-                    <td class="col-2 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
-                    <td class="col-2 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
-                    <td class="col-1 part-items-star-horometer text-center">${pdm.HorometroInicio}</td>
-                    <td class="col-1 part-items-end-horometer text-center">${pdm.HorometroFinal}</td>  
-                </tr>
-                 `
-                $(`#table-part-daily-body`).append(tr);
+            .then(response => {
+                if (response.data.length > 0) {
+                    $("#pdm-image-list").empty();
+                    response.data.map((pdm, index) => {
+                        let tr = `
+                        <tr class="d-flex part-items pdm" id="daily-item-${pdm.IdParteDiario}">
+                            <td class="col-1 text-center">${index + 1}</th>
+                            <td class="col-3 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdParte}</td>
+                            <td class="col-1 part-items-star-time text-center"> ------ </td>
+                            <td class="col-1 part-items-end-time text-center"> ------ </td>
+                            <td class="col-2 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
+                            <td class="col-2 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
+                            <td class="col-1 part-items-star-horometer text-center">${pdm.HorometroInicio}</td>
+                            <td class="col-1 part-items-end-horometer text-center">${pdm.HorometroFinal}</td>  
+                        </tr>
+                        `
+                        $(`#table-part-daily-body`).append(tr);
+                    })
+                }
+                else {
+                    
+                }
             })
-        })
         .catch(error => {
             console.log(error);
         });
@@ -1397,7 +1452,8 @@
                 Observacion: "-------",
                 IdAccion: "00"
             }]
-
+            const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData;
+            console.log(user)
             //Get Values - Main Head
             let PDM_PARTE_DIARIO = JSON.stringify({
                 IdParte: IdParteDefault,
@@ -1405,11 +1461,11 @@
                 IdMaquinaria: $("#machinery").val(),
                 IdImplemento: $("#implement").val(),
                 IdTipoImplemento: $("#implementType").val(),
-                IdOperario: $("#operator").val() | "010129".toString(),
+                IdOperario: $("#operator").val() | "010129",
                 IdTurno: $("#turn").val(),
                 PDM_CHECKLIST: checkListData,
-                PDM_OBSERVACION: observationsData.length !== 0 ? observationsData : observationsDefaultData,
-                IdUsuario: 2
+                PDM_OBSERVACION: obrData,
+                IdUsuario: user.CodUsuario
             });
 
             console.log(PDM_PARTE_DIARIO);
@@ -1554,9 +1610,9 @@
                 }
 
                 let countItem = $(`#table-part-daily-body`).children().length;
-
+                    
                 let tr = `
-                <tr class="d-flex part-items pdm-0" id="daily-item-${countItem + 1}">
+                <tr class="d-flex part-items pdm" id="daily-item-${0}">
                     <td class="col-1 text-center">${countItem + 1}</th>
                     <td class="col-3 part-items-consumer text-left" id=${data.Consumidor.IdConsumidor}>${data.Consumidor.Descripcion}</td>
                     <td class="col-1 part-items-star-time text-center" id=${statDay}> ${data.HoraInicio}</td>
@@ -1567,6 +1623,7 @@
                     <td class="col-1 part-items-end-horometer text-center">${data.HorometroFinal}</td>  
                 </tr>
                  `
+                $("#pdm-image-list").empty();
                 $(`#table-part-daily-body`).append(tr);
 
                 //Refresh Item
@@ -1606,7 +1663,9 @@
 
             let dailies = new Array();
             $(".part-items").each(function () {
+                let IdParteDiario = $(this).attr("id").split("-").pop();
                 let partDataDaily = {
+                    IdParteDiario: IdParteDiario,
                     IdConsumidor: $(this).children(".part-items-consumer").attr("id"), 
                     IdActividad: $(this).children(".part-items-activity").attr("id"), 
                     IdLabor: $(this).children(".part-items-work").attr("id"),
@@ -1675,7 +1734,7 @@
                 let horometer = $(this).children(".fuel-items-item-horometer").children("input").val();
                 fuels.push({ IdCombustible: 0, Galones: parseFloat(fuel), horometro: parseFloat(horometer) });
             })
-
+           
             let PDM_ABASTECIMIENTO = JSON.stringify({
                 IdParte: IdParteDefault,
                 IdUsuario: user.CodUsuario, 
@@ -1695,6 +1754,42 @@
                         // settings
                         type: 'success',
                         delay: 100,
+                    });
+                axios.get(`${URL}/PDMCombustible/Index`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdParte: JSON.parse(dataPDM).IdParte
+                    }
+                })
+                .then(response => {
+                    $(`#fuel-items`).empty();
+                    $(`#fuel-items-save`).empty();
+                    $(`#add-fuel`).focus();
+                    if (response.data.length > 0) {
+                        response.data.map((item, index) => {
+                            let li = `
+                                    <li class="form-row" id="fuel-item-${item.IdCombustible}">
+                                        <div class="form-group col-sm-6 col-md-6 fuel-items-item-fuel">
+                                            <label for="fuel-${item.IdCombustible}">Combustible-${index + 1}</label>
+                                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-${item.IdCombustible}" id="fuel-${item.IdCombustible}" value=${item.Galones} required disabled/>
+                                            <p class="text-danger" id="error-fuel-${item.IdCombustible}"></p>
+                                        </div>
+                                        <div class="form-group col-sm-6 col-md-6 fuel-items-item-horometer">
+                                            <label for="fuel-horometer-${item.IdCombustible}">Horómetro-${index + 1}</label>
+                                            <input class="form-control" type="number" step="0.01" min="0.01" name="fuel-horometer-${item.IdCombustible}" id="fuel-horometer-${item.IdCombustible}" value=${item.Horometro} required disabled/>
+                                            <p class="text-danger" id="error-end-horometer-${item.IdCombustible}"></p>
+                                        </div>
+                                    </li>
+                                `
+                            $(`#fuel-items-save`).append(li);
+                        })
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
                 });
             }).catch(error => {
                 console.log(error)

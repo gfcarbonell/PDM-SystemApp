@@ -46,22 +46,18 @@
     <script src="~/Scripts/bootstrap-notify.js"></script>
     @Scripts.Render("~/bundles/bootstrap-select")
     <script src="~/Scripts/index.js"></script>
-
-    @RenderSection("scripts", required: false)
-
-</body>
-</html>
-
-
-<script type="text/javascript">
-    $(() => {
-        const userData = JSON.parse(localStorage.getItem("data"));
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="/SignalR/Hubs"></script>
+    <script type="text/javascript">
+        $(() => {
+        let data = localStorage.getItem("data");
+        const user = JSON.parse(data);
         /*
-           
+
         <li>Html.ActionLink("Acerca de", "About", "PDMHome", new { area = "" }, new { class = "nav-link" })</li>
             <li>Html.ActionLink("Contacto", "Contact", "PDMHome", new { area = "" }, new { class = "nav-link" })</li>
         */
-        if (userData) {
+        if (user) {
             let navItem1 = `<li>@Html.ActionLink("Crear nuevo", "Index", "PDMHome", new { area = "" }, new { @class = "nav-link active" })</li>`
             let navItem2 = `<li>@Html.ActionLink("Consulta", "CheckList", "PDMHome", new { area = "" }, new { @class = "nav-link" })</li>`
             let navItem3 = `<li>
@@ -71,7 +67,7 @@
                             </li>`
             $(`#navItems`).append([navItem1, navItem2, navItem3]);
         }
-
+        
         $(`#logout`).click(event => {
             event.preventDefault();
             localStorage.removeItem("data");
@@ -79,4 +75,10 @@
         })
 
     })
-</script>
+    </script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+

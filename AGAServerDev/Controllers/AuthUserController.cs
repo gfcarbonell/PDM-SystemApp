@@ -27,5 +27,14 @@ namespace AGAServerDev.Controllers
             var obj = serv.Permisos(auth_user);
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+
+        // Post: AuthUser - Perfil de Usuario
+        [HttpGet]
+        public JsonResult PerfilUsuario(string IdModulo)
+        {
+            AUTH_USER_SERV serv = new AUTH_USER_SERV();
+            var obj = serv.GetUserProfile(IdModulo);
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
     }
 }
