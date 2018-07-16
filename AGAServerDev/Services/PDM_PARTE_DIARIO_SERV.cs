@@ -80,10 +80,11 @@ namespace AGAServerDev.Services
                         var FechaParameter = new SqlParameter();
                         var IdUsuarioParameter = new SqlParameter();
                         var IdSucursalParameter = new SqlParameter();
+                        var IdOperarioParameter = new SqlParameter();
 
                         FechaParameter.ParameterName = "@Fecha";
                         FechaParameter.Direction = ParameterDirection.Input;
-                        FechaParameter.SqlDbType = SqlDbType.Date;
+                        FechaParameter.SqlDbType = SqlDbType.DateTime;
                         FechaParameter.Value = Fecha;
 
                         IdUsuarioParameter.ParameterName = "@IdUsuario";
@@ -96,8 +97,13 @@ namespace AGAServerDev.Services
                         IdSucursalParameter.SqlDbType = SqlDbType.VarChar;
                         IdSucursalParameter.Value = IdSucursal;
 
-                        var parteDiarios = db.Database.SqlQuery<PDM_PARTE_EXT>("dbo.[PR_PDM_PARTE_QRY_Diario] @Fecha", 
-                            FechaParameter)
+                        IdOperarioParameter.ParameterName = "@IdOperario";
+                        IdOperarioParameter.Direction = ParameterDirection.Input;
+                        IdOperarioParameter.SqlDbType = SqlDbType.VarChar;
+                        IdOperarioParameter.Value = "";
+
+                        var parteDiarios = db.Database.SqlQuery<PDM_PARTE_EXT>("dbo.[PR_PDM_PARTE_QRY_Diario] @Fecha, @IdSucursal, @IdOperario, @IdUsuario", 
+                            FechaParameter, IdSucursalParameter, IdOperarioParameter, IdUsuarioParameter)
                             .Select(t => new PDM_PARTE_EXT
                             {
                                 IdParte = t.IdParte,
@@ -108,7 +114,7 @@ namespace AGAServerDev.Services
                                 IdMaquinaria = t.IdMaquinaria,
                                 IdOperario = t.IdOperario, 
                                 IdEstado = t.IdEstado,
-                                IdTurno = t.IdTurno
+                                IdTurno = t.IdTurno,
                             }).ToList();
 
                         ctxTrans.Commit(); // OK

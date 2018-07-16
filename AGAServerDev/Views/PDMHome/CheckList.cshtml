@@ -70,17 +70,12 @@
             });
 
 
-
-
-
-
-
-
             /// Get Date now
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
-            var today = now.getFullYear() + "/" + (month) + "/" + (day);
+            var year = now.getFullYear()
+            var today = (year) + "/" + (month) + "/" + (day);
 
             let userData = localStorage.getItem("data");
             const user = JSON.parse(userData);
@@ -109,7 +104,7 @@
                 })
                 .then(response => {
                     console.log(response.data);
-                    if (response.data) {
+                    if (response.data.length>0) {
                         $("#table-image-list").empty();
                         response.data.map((item, index) => {
                             let jsonDate = item.Fecha;  // returns "/Date(1245398693390)/";

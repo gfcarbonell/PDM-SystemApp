@@ -94,8 +94,8 @@ namespace AGAServerDev.Services
                         DataTable pdm = new DataTable();
                         pdm.Columns.Add(new DataColumn("IdParteDiario", typeof(int)));
                         pdm.Columns.Add(new DataColumn("IdConsumidor", typeof(string)));
-                        pdm.Columns.Add(new DataColumn("HoraInicio", typeof(Double)));
-                        pdm.Columns.Add(new DataColumn("HoraFin", typeof(Double)));
+                        pdm.Columns.Add(new DataColumn("HoraInicio", typeof(DateTime)));
+                        pdm.Columns.Add(new DataColumn("HoraFin", typeof(DateTime)));
                         pdm.Columns.Add(new DataColumn("IdActividad", typeof(string)));
                         pdm.Columns.Add(new DataColumn("IdLabor", typeof(string)));
                         pdm.Columns.Add(new DataColumn("HorometroInicio", typeof(double)));
@@ -106,8 +106,8 @@ namespace AGAServerDev.Services
                             DataRow row = pdm.NewRow();
                             row["IdParteDiario"] = item.IdParte;
                             row["IdConsumidor"] = item.IdConsumidor;
-                            row["HoraInicio"] = item.HorometroInicio;
-                            row["HoraFin"] = item.HorometroFinal;
+                            row["HoraInicio"] = item.HoraInicio;
+                            row["HoraFin"] = item.HoraFin;
                             row["IdActividad"] = item.IdActividad;
                             row["IdLabor"] = item.IdLabor;
                             row["HorometroInicio"] = item.HorometroInicio;

@@ -18,20 +18,20 @@
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="headquarters">Sucursales - Sedes - Fundos</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters" data-size="10" required>
+                        <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters" disabled data-size="10" required>
                             <option data-tokens="000" value="000">---</option>
                         </select>
                         <p class="text-danger" id="error-headquarters"></p>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="machinery">Maquinarias</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="10" disabled required></select>
+                        <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="10" disabled required ></select>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="implementType">Tipos de implemento</label>
-                        <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="10" disabled required>
+                        <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="10" disabled required >
                             <option data-tokens="000" value="000">---</option>
                         </select>
                         <p class="text-danger" id="error-implementType"></p>
@@ -93,7 +93,7 @@
             <div class="margin-bottom-lg">
                 <h2 class="text-center ">Registrar Parte Diario Maquinaria </h2>
             </div>
-            <form role="form" data-toggle="validator" id="form-add-item-part-daily">
+            <form role="form" class="form-add-item-part-daily" data-toggle="validator" id="form-add-item-part-daily">
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label for="headquarters">Consumidor</label>
@@ -174,13 +174,14 @@
                         <thead class="thead-light text-white">
                             <tr class="d-flex">
                                 <th class="col-1 text-center font-weight-bold">#</th>
-                                <th class="col-3 text-left font-weight-bold">Consumidor</th>
-                                <th class="col-1 text-center font-weight-bold">Hora Inicio</th>
-                                <th class="col-1 text-center font-weight-bold">Hora Final</th>
-                                <th class="col-2 text-left font-weight-bold">Actividad</th>
-                                <th class="col-2 text-left font-weight-bold">Labor</th>
+                                <th class="col-2 text-left font-weight-bold">Consumidor</th>
+                                <th class="col-2 text-center font-weight-bold">Hora Inicio</th>
+                                <th class="col-2 text-center font-weight-bold">Hora Final</th>
+                                <th class="col-1 text-left font-weight-bold">Actividad</th>
+                                <th class="col-1 text-left font-weight-bold">Labor</th>
                                 <th class="col-1 text-center font-weight-bold">Htro. Inicial</th>
                                 <th class="col-1 text-center font-weight-bold">Htro. Final</th>
+                                <th class="col-1 text-center font-weight-bold">Editar</th>
                             </tr>
                         </thead>
                         <tbody id="table-part-daily-body"></tbody>
@@ -249,12 +250,13 @@
 </div>
 
 @section scripts {
+<script src="~/Scripts/utils/utils.js"></script>
 <script type="text/javascript">
 
     $(() => {
 
         
-        let data = localStorage.getItem("data");
+        const data = localStorage.getItem("data");
         const user = JSON.parse(data);
 
         if (!user) {
@@ -275,7 +277,6 @@
         var checkListSistemaDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["checkSistema"])));
         var checkListImplementoDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["checkImplemento"])));
         var observacionesDefault = JSON.parse(@Html.Raw(Json.Encode(ViewData["observaciones"])));
-
         //Fecha Actual - change Format dd-mm-yyyy to yyyy-mm-dd
         var oldFormat = FechaDefault.split(" ")[0]
         var convert = oldFormat.split("/")
@@ -314,7 +315,7 @@
         });
 
         //GET -> Controller:PDMTurno/Index
-        //Inicializar Turno
+        //Inicializar Turno - disabled
         $('#turn').on('loaded.bs.select', (e) => {
             axios.get(`${URL}/PDMTurno/`, {
                 headers: {
@@ -333,7 +334,7 @@
 
                     $("#turn").append(option)
                     $("#turn").selectpicker('refresh');
-                    $("#turn").removeAttr("disabled");
+                    //$("#turn").removeAttr("disabled");
                 });
             })
             .catch(error => {
@@ -342,7 +343,7 @@
         });
 
         //GET -> Controller:PDMTurno/Index
-        //Inicializar Turno
+        //Inicializar Activity 
         $('#activity').on('loaded.bs.select', (e) => {
             axios.get(`${URL}/PDMActividad/`, {
                 headers: {
@@ -366,7 +367,7 @@
         });
 
         //GET -> Controller:Tipo Implemento/Index
-        //Inicializar Tipo Implemento
+        //Inicializar Tipo Implemento - disabled
         $('#implementType').on('loaded.bs.select', (e) => {
             axios.get(`${URL}/PDMTipoImplemento/IndexJSON`, {
                 headers: {
@@ -378,14 +379,14 @@
                 response.data.map((item, index) => {
                     let option;
                     if (IdTipoImplementoDefault === item.IdTipoImplemento) {
-                        option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento} selected> ${item.Descripcion} </option>`;
+                        option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento} selected > ${item.Descripcion} </option>`;
                     }
                     else {
                         option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
                     }
                     $("#implementType").append(option)
                     $("#implementType").selectpicker('refresh');
-                    $("#implementType").removeAttr("disabled");
+                    //$("#implementType").removeAttr("disabled");
                 });
             })
             .then(response => {
@@ -438,9 +439,9 @@
                             <tr class="d-flex components" id="component-${item.IdComponente}">
                                 <td class="col-1 text-center">${indice}</td>
                                 <td class="col-5 text-left">${item.Componente}</td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" checked value=0 name=${item.IdComponente}></td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" checked value=0 name=${item.IdComponente} disabled></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} disabled></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} disabled></td>
                             </tr>
                             `;
                         }
@@ -449,9 +450,9 @@
                             <tr class="d-flex components" id="component-${item.IdComponente}">
                                 <td class="col-1 text-center">${indice}</td>
                                 <td class="col-5 text-left">${item.Componente}</td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${item.IdComponente}></td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" checked value=1 name=${item.IdComponente} ></td>
-                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" value=0 name=${item.IdComponente} disabled></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" checked value=1 name=${item.IdComponente} disabled></td>
+                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} disabled></td>
                             </tr>
                             `;
                         }
@@ -491,7 +492,7 @@
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="observation-system-${obser.IdSistema}">Observaciones:</label>
                                                         </div>
-                                                        <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}">${obser.Observacion}</textarea>
+                                                        <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}" disabled>${obser.Observacion}</textarea>
                                                     </div>
                                                     <div class="col-md-4" id="container-action-${obser.IdSistema}">
                                                         <label for="system-action-${obser.IdSistema}">Acciones</label>
@@ -597,7 +598,7 @@
             });
         });
         
-        //Inicializar Sede
+        //Inicializar Sede - disabled
         $('#headquarters').on('loaded.bs.select', (e) => {
             axios.get(`${URL}/PDMSucursal/`, {
                 headers: {
@@ -617,7 +618,7 @@
 
                     $("#headquarters").append(option)
                     $("#headquarters").selectpicker('refresh');
-                    $("#headquarters").removeAttr("disabled");
+                    //$("#headquarters").removeAttr("disabled");
                 });
 
                 let data = {
@@ -657,7 +658,7 @@
                             }
                             $("#implement").selectpicker('refresh');
                             $("#implement").append(option)
-                            $("#implement").removeAttr("disabled");
+                            //$("#implement").removeAttr("disabled");
                         });
                     }
                     else {
@@ -692,7 +693,7 @@
                             }
                             $(`#machinery`).selectpicker('refresh');
                             $(`#machinery`).append(option)
-                            $(`#machinery`).removeAttr("disabled");
+                            //$(`#machinery`).removeAttr("disabled");
                         });
                     }
                     else {
@@ -759,26 +760,26 @@
                     IdActividad: JSON.parse(dataActividad).IdActividad,
                 }
             })
-                .then(response => {
+            .then(response => {
                     
-                    $(`#work`).empty();
-                    if (response.data.length > 0) {
-                        response.data.map((item, index) => {
-                            $("#work").selectpicker('refresh');
-                            let option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
-                            $("#work").append(option)
-                            $("#work").removeAttr("disabled");
-                        });
-                    }
-                    else {
-                        $("#work").prop('disabled', true);
-                        $(`#work`).selectpicker('refresh');
-                    }
+                $(`#work`).empty();
+                if (response.data.length > 0) {
+                    response.data.map((item, index) => {
+                        $("#work").selectpicker('refresh');
+                        let option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
+                        $("#work").append(option)
+                        $("#work").removeAttr("disabled");
+                    });
+                }
+                else {
+                    $("#work").prop('disabled', true);
+                    $(`#work`).selectpicker('refresh');
+                }
                     
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
         })
         //Change -> Sede
         $('#headquarters').on('changed.bs.select	', (e) => {
@@ -1064,9 +1065,9 @@
                                     <tr class="d-flex components" id="component-${parte.IdComponente}">
                                         <td class="col-1 text-center">${indice}</td>
                                         <td class="col-5 text-left">${parte.Componente}</td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" checked required value=0 name=${parte.IdComponente}></td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} ></td>
-                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} ></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" checked required value=0 name=${parte.IdComponente} disabled></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${parte.IdComponente} disabled></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${parte.IdComponente} disabled></td>
                                     </tr>
                                     `;
                             }
@@ -1119,7 +1120,7 @@
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <label for="observation-system-${obser.IdSistema}">Observaciones:</label>
                                                         </div>
-                                                        <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}" required>${obser.Observacion}</textarea>
+                                                        <textarea class="form-control observations" rows="1" id="observation-system-${obser.IdSistema}" required disabled>${obser.Observacion}</textarea>
                                                     </div>
                                                     <div class="col-md-4" id="container-action-${obser.IdSistema}">
                                                         <label for="system-action-${obser.IdSistema}">Acciones</label>
@@ -1237,7 +1238,7 @@
             IdParte: IdParteDefault,
         })
 
-        //Get Part Daily Machenery 
+        //Get Part Daily Fuels 
         axios.get(`${URL}/PDMCombustible/Index`, {
             headers: {
                 'Accept': 'application/json',
@@ -1282,33 +1283,113 @@
                 IdParte: JSON.parse(dataPDM).IdParte
             }
         })
-            .then(response => {
-                if (response.data.length > 0) {
-                    $("#pdm-image-list").empty();
-                    response.data.map((pdm, index) => {
-                        let tr = `
-                        <tr class="d-flex part-items pdm" id="daily-item-${pdm.IdParteDiario}">
-                            <td class="col-1 text-center">${index + 1}</th>
-                            <td class="col-3 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdParte}</td>
-                            <td class="col-1 part-items-star-time text-center"> ------ </td>
-                            <td class="col-1 part-items-end-time text-center"> ------ </td>
-                            <td class="col-2 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
-                            <td class="col-2 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
-                            <td class="col-1 part-items-star-horometer text-center">${pdm.HorometroInicio}</td>
-                            <td class="col-1 part-items-end-horometer text-center">${pdm.HorometroFinal}</td>  
-                        </tr>
-                        `
-                        $(`#table-part-daily-body`).append(tr);
-                    })
-                }
-                else {
+        .then(response => {
+            if (response.data.length > 0) {
+                $("#pdm-image-list").empty();
+                response.data.map((pdm, index) => {
+                    let startHour = formatDateTimeCSharpToJavascript(pdm.HoraInicio, false)
+                    startnewHour = startHour.split("T")[1];
+                    startnewHour = `${startnewHour.split(":")[0]}:${startnewHour.split(":")[1]}`;
+
+                    let endHour = formatDateTimeCSharpToJavascript(pdm.HoraFin, false)
+                    endnewHour = endHour.split("T")[1];
+                    endnewHour = `${endnewHour.split(":")[0]}:${endnewHour.split(":")[1]}`;
+
+                    let tr = $(`
+                    <tr class="d-flex part-items pdm" id="daily-item-${pdm.IdParteDiario}">
+                        <td class="col-1 text-center">${index + 1}</th>
+                        <td class="col-2 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdConsumidor}</td>
+                        <td class="col-2 part-items-star-time text-center" id=${startHour}> ${startnewHour} </td>
+                        <td class="col-2 part-items-end-time text-center" id=${endHour}> ${endnewHour} </td>
+                        <td class="col-1 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
+                        <td class="col-1 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
+                        <td class="col-1 part-items-star-horometer text-center" id=${pdm.HorometroInicio}>${pdm.HorometroInicio}</td>
+                        <td class="col-1 part-items-end-horometer text-center" id=${pdm.HorometroFinal}>${pdm.HorometroFinal}</td> 
+                        <td class="col-1 part-items-end-edit text-center"> <a href="#" id=${pdm.IdParteDiario}> Editar </a> </td>
+                    </tr>
+                    `);
+                        
+                    //Bind Event
+                    tr.children("td").children("a").bind("click", (event) => {
+                        event.preventDefault();
+                        let IdParte = $(event.target).parent().parent().attr("id").split("-").pop();
+                        let data = {
+                            IdParte: IdParte,
+                            IdConsumidor:$(event.target).parent().parent().children(".part-items-consumer").attr("id"),
+                            HoraInicio:$(event.target).parent().parent().children(".part-items-star-time").attr("id"),
+                            HoraFin:$(event.target).parent().parent().children(".part-items-end-time").attr("id"),
+                            IdActividad:$(event.target).parent().parent().children(".part-items-activity").attr("id"),
+                            IdLabor:$(event.target).parent().parent().children(".part-items-work").attr("id"),
+                            HorometroInicio:$(event.target).parent().parent().children(".part-items-star-horometer").attr("id"),
+                            HorometroFin:$(event.target).parent().parent().children(".part-items-end-horometer").attr("id")
+                        }
+
+                        let newHoraInicio = changeDateSimbol(data.HoraInicio.split("T")[0], "-")
+                        let newHoraFin = changeDateSimbol(data.HoraFin.split("T")[0], "-")
+                        $(`.form-add-item-part-daily`).attr(`name`, `daily-item-${data.IdParte}`);
+
+                        $(`#star-date`).val(newHoraInicio);
+                        $(`#end-date`).val(newHoraFin);
+                        $(`#star-time`).val(data.HoraInicio.split("T").pop());
+                        $(`#end-time`).val(data.HoraFin.split("T").pop());
+                        $(`#star-horometer`).val(data.HorometroInicio);
+                        $(`#end-horometer`).val(data.HorometroFin);
+                        $(`#consumer`).val(data.IdConsumidor);
+                        $("#consumer").selectpicker("refresh");
+                        $(`#activity`).val(data.IdActividad);
+                        $("#activity").selectpicker("refresh");
+                        $(event.target).parent().parent().remove();
+                        let dataActividad = JSON.stringify({
+                            IdActividad: data.IdActividad,
+                        })
+                        //Work for Activity
+                        axios.get(`${URL}/PDMLabor/`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            params: {
+                                IdActividad: JSON.parse(dataActividad).IdActividad,
+                            }
+                        })
+                        .then(response => {
+                            $(`#work`).empty();
+                            if (response.data.length > 0) {
+                                response.data.map((item, index) => {
+                                    $("#work").selectpicker('refresh');
+                                    let option;
+                                    if (item.IdLabor === data.IdLabor) {
+                                        option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor} selected> ${item.Descripcion}</option>`;
+                                    } else {
+                                        option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
+                                    }
+                                    $("#work").append(option)
+                                    $("#work").removeAttr("disabled");
+                                });
+                            }
+                            else {
+                                $("#work").prop('disabled', true);
+                                $(`#work`).selectpicker('refresh');
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                            console.log(data);
+                        });
+                    $(`#table-part-daily-body`).append(tr);
+                   
+                })
+            }
+            else {
                     
-                }
-            })
+            }
+        })
         .catch(error => {
             console.log(error);
         });
-   
+
+        
 
         //Remove Fuel
         $(`#remove-extra-fuel`).click(event => {
@@ -1502,149 +1583,228 @@
         });
         //Submit Add Item Daily
         $(`#form-add-item-part-daily`).submit((event) => {
-                event.preventDefault();
-                //Consumer
-                if ($(`#consumer`).val() === '000' || $(`#consumer`).val() === "" || $(`#consumer`).val() === undefined) {
-                    $(`#error-consumer`).text("Debe seleccionar un consumidor.");
-                    $.notify({
-                        // options
-                        message: 'Debe seleccionar un consumidor.'
-                    }, {
-                            // settings
-                            type: 'danger',
-                            delay: 100,
-                        });
-                    throw "Select consumer";
-                } else {
-                    $(`#error-consumer`).empty();
-                }
+            event.preventDefault();
+            //Consumer
+            if ($(`#consumer`).val() === '000' || $(`#consumer`).val() === "" || $(`#consumer`).val() === undefined) {
+                $(`#error-consumer`).text("Debe seleccionar un consumidor.");
+                $.notify({
+                    // options
+                    message: 'Debe seleccionar un consumidor.'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select consumer";
+            } else {
+                $(`#error-consumer`).empty();
+            }
 
-                //Comparation time
-                if ($("#star-time").val() >= $("#end-time").val()) {
-                    $(`#error-star-datetime`).text("La hora inicial no debe ser mayor o igual a la hora final");
-                    $(`#error-end-datetime`).text("La hora final no debe ser menor o igual a la hora inicial");
-                    $.notify({
-                        // options
-                        message: 'Error de tiempos'
-                    }, {
-                            // settings
-                            type: 'danger',
-                            delay: 100,
-                        });
-                    throw "Select star-datetime";
-                } else {
-                    $(`#error-star-datetime`).empty();
-                    $(`#error-end-datetime`).empty();
-                }
+            //Comparation time
+            if ($("#star-time").val() >= $("#end-time").val()) {
+                $(`#error-star-datetime`).text("La hora inicial no debe ser mayor o igual a la hora final");
+                $(`#error-end-datetime`).text("La hora final no debe ser menor o igual a la hora inicial");
+                $.notify({
+                    // options
+                    message: 'Error de tiempos'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select star-datetime";
+            } else {
+                $(`#error-star-datetime`).empty();
+                $(`#error-end-datetime`).empty();
+            }
 
-                //Activity
-                if ($(`#activity`).val() === '000') {
-                    $(`#error-activity`).text("Debe seleccionar una actividad.");
-                    $.notify({
-                        // options
-                        message: 'Debe seleccionar una actividad.'
-                    }, {
-                            // settings
-                            type: 'danger',
-                            delay: 100,
-                        });
-                    throw "Select activity";
-                } else {
-                    $(`#error-activity`).empty();
-                }
+            //Activity
+            if ($(`#activity`).val() === '000') {
+                $(`#error-activity`).text("Debe seleccionar una actividad.");
+                $.notify({
+                    // options
+                    message: 'Debe seleccionar una actividad.'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select activity";
+            } else {
+                $(`#error-activity`).empty();
+            }
 
-                //Comparation Horometer 
-                if ($(`#star-horometer`).val() >= $(`#end-horometer`).val()) {
-                    $(`#error-star-horometer`).text("El horométro inicial no debe ser mayor o igual al horométro final.");
-                    $(`#error-end-horometer`).text("El horométro final no debe ser mayor o igual al horométro inicial.");
+            //Comparation Horometer 
+            if ($(`#star-horometer`).val() >= $(`#end-horometer`).val()) {
+                $(`#error-star-horometer`).text("El horométro inicial no debe ser mayor o igual al horométro final.");
+                $(`#error-end-horometer`).text("El horométro final no debe ser mayor o igual al horométro inicial.");
 
-                    $.notify({
-                        // options
-                        message: 'Error de horométros'
-                    }, {
-                            // settings
-                            type: 'danger',
-                            delay: 100,
-                        });
-                    throw "Select horometers";
-                }
-                else {
-                    $(`#error-star-horometer`).empty();
-                    $(`#error-end-horometer`).empty();
-                }
+                $.notify({
+                    // options
+                    message: 'Error de horométros'
+                }, {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
+                throw "Select horometers";
+            }
+            else {
+                $(`#error-star-horometer`).empty();
+                $(`#error-end-horometer`).empty();
+            }
 
-                //DateTime
-                let statDay = `${$("#star-date").val()}T${$("#star-time").val()}`;
-                let endDay = `${$("#end-date").val()}T${$("#end-time").val()}`;
+            //DateTime
+            let statDay = `${$("#star-date").val()}T${$("#star-time").val()}`;
+            let endDay = `${$("#end-date").val()}T${$("#end-time").val()}`;
 
-                let consumerDescription = $("#consumer option").filter(function () {
-                    return $.trim($(this).val()) == $(`#consumer`).val()
-                }).prop('selected', true).text().trim();
+            let consumerDescription = $("#consumer option").filter(function () {
+                return $.trim($(this).val()) == $(`#consumer`).val()
+            }).prop('selected', true).text().trim();
 
-                let activityDescription = $("#activity option").filter(function () {
-                    return $.trim($(this).val()) == $(`#activity`).val()
-                }).prop('selected', true).text().trim();
+            let activityDescription = $("#activity option").filter(function () {
+                return $.trim($(this).val()) == $(`#activity`).val()
+            }).prop('selected', true).text().trim();
 
-                let workDescription = $("#work option").filter(function () {
-                    return $.trim($(this).val()) == $(`#work`).val()
-                }).prop('selected', true).text().trim();
+            let workDescription = $("#work option").filter(function () {
+                return $.trim($(this).val()) == $(`#work`).val()
+            }).prop('selected', true).text().trim();
 
-                let data = {
+            let data = {
+                Consumidor: {
+                    IdConsumidor: $(`#consumer`).val(),
+                    Descripcion: consumerDescription
+                },
+                HoraInicio: $("#star-time").val(),
+                HoraFinal: $("#end-time").val(),
+                Actividad: {
+                    IdActividad: $(`#activity`).val(),
+                    Descripcion: activityDescription,
+                },
+                Labor: {
+                    IdLabor: $(`#work`).val(),
+                    Descripcion: workDescription
+                },
+                HorometroInicio: parseFloat($(`#star-horometer`).val()),
+                HorometroFinal: parseFloat($(`#end-horometer`).val()),
+            }
+            let countItem = $(`#table-part-daily-body`).children().length;
 
-                    Consumidor: {
-                        IdConsumidor: $(`#consumer`).val(),
-                        Descripcion: consumerDescription
-                    },
-                    HoraInicio: $("#star-time").val(),
-                    HoraFinal: $("#end-time").val(),
-                    Actividad: {
-                        IdActividad: $(`#activity`).val(),
-                        Descripcion: activityDescription,
-                    },
-                    Labor: {
-                        IdLabor: $(`#work`).val(),
-                        Descripcion: workDescription
-                    },
-                    HorometroInicio: parseFloat($(`#star-horometer`).val()),
-                    HorometroFinal: parseFloat($(`#end-horometer`).val()),
-                }
+            let getIdForm;
 
-                let countItem = $(`#table-part-daily-body`).children().length;
-                    
-                let tr = `
-                <tr class="d-flex part-items pdm" id="daily-item-${0}">
+            if ($(`.form-add-item-part-daily`).attr(`name`)) {
+                getIdForm = $(`.form-add-item-part-daily`).attr(`name`);
+                getIdForm = getIdForm.toString().split("-").pop();
+            }
+            else {
+                getIdForm = 0;
+            }
+            console.log(getIdForm);
+           
+            let tr = $(`
+                <tr class="d-flex part-items pdm" id="daily-item-${getIdForm}">
                     <td class="col-1 text-center">${countItem + 1}</th>
-                    <td class="col-3 part-items-consumer text-left" id=${data.Consumidor.IdConsumidor}>${data.Consumidor.Descripcion}</td>
-                    <td class="col-1 part-items-star-time text-center" id=${statDay}> ${data.HoraInicio}</td>
-                    <td class="col-1 part-items-end-time text-center" id=${endDay}>${data.HoraFinal}</td>
-                    <td class="col-2 part-items-activity text-left" id=${data.Actividad.IdActividad}>${data.Actividad.Descripcion}</td>
-                    <td class="col-2 part-items-work text-left" id=${data.Labor.IdLabor}>${data.Labor.Descripcion}</td>
-                    <td class="col-1 part-items-star-horometer text-center">${data.HorometroInicio}</td>
-                    <td class="col-1 part-items-end-horometer text-center">${data.HorometroFinal}</td>  
+                    <td class="col-2 part-items-consumer text-left" id=${data.Consumidor.IdConsumidor}>${data.Consumidor.IdConsumidor}</td>
+                    <td class="col-2 part-items-star-time text-center" id="${statDay}"> ${data.HoraInicio}</td>
+                    <td class="col-2 part-items-end-time text-center" id="${endDay}">${data.HoraFinal}</td>
+                    <td class="col-1 part-items-activity text-left" id=${data.Actividad.IdActividad}>${data.Actividad.IdActividad}</td>
+                    <td class="col-1 part-items-work text-left" id=${data.Labor.IdLabor}>${data.Labor.IdLabor}</td>
+                    <td class="col-1 part-items-star-horometer text-center" id=${data.HorometroInicio}>${data.HorometroInicio}</td>
+                    <td class="col-1 part-items-end-horometer text-center" id=${data.HorometroFinal}>${data.HorometroFinal}</td> 
+                    <td class="col-1 part-items-end-edit text-center"> <a href="#" id=${data.IdParteDiario}> Editar </a> </td>
                 </tr>
-                 `
-                $("#pdm-image-list").empty();
-                $(`#table-part-daily-body`).append(tr);
+                `);
+            //Bind Event
+            tr.children("td").children("a").bind("click", (event) => {
+                event.preventDefault();
+                let IdParte = $(event.target).parent().parent().attr("id").split("-").pop();
+                let data = {
+                    IdParte: IdParte,
+                    IdConsumidor: $(event.target).parent().parent().children(".part-items-consumer").attr("id"),
+                    HoraInicio: $(event.target).parent().parent().children(".part-items-star-time").attr("id"),
+                    HoraFin: $(event.target).parent().parent().children(".part-items-end-time").attr("id"),
+                    IdActividad: $(event.target).parent().parent().children(".part-items-activity").attr("id"),
+                    IdLabor: $(event.target).parent().parent().children(".part-items-work").attr("id"),
+                    HorometroInicio: $(event.target).parent().parent().children(".part-items-star-horometer").attr("id"),
+                    HorometroFin: $(event.target).parent().parent().children(".part-items-end-horometer").attr("id")
+                }
 
-                //Refresh Item
-                $("#consumer").val('default');
-                $("#consumer").selectpicker({ title: "Elige un nuevo consumidor." });
+                let newHoraInicio = changeDateSimbol(data.HoraInicio.split("T")[0], "-")
+                let newHoraFin = changeDateSimbol(data.HoraFin.split("T")[0], "-")
+                $(`.form-add-item-part-daily`).attr(`name`, `daily-item-${data.IdParte}`);
+                $(`#star-date`).val(newHoraInicio);
+                $(`#end-date`).val(newHoraFin);
+                $(`#star-time`).val(data.HoraInicio.split("T").pop());
+                $(`#end-time`).val(data.HoraFin.split("T").pop());
+                $(`#star-horometer`).val(data.HorometroInicio);
+                $(`#end-horometer`).val(data.HorometroFin);
+                $(`#consumer`).val(data.IdConsumidor);
                 $("#consumer").selectpicker("refresh");
-
-                $("#activity").selectpicker({ title: "Elige un nueva actividad." });
-                $("#activity").val('default');
+                $(`#activity`).val(data.IdActividad);
                 $("#activity").selectpicker("refresh");
+                console.log(data);
+                $(event.target).parent().parent().remove();    
+                let dataActividad = JSON.stringify({
+                    IdActividad: data.IdActividad,
+                })
+                //Work for Activity
+                axios.get(`${URL}/PDMLabor/`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdActividad: JSON.parse(dataActividad).IdActividad,
+                    }
+                })
+                .then(response => {
+                    $(`#work`).empty();
+                    if (response.data.length > 0) {
+                        response.data.map((item, index) => {
+                            $("#work").selectpicker('refresh');
+                            let option;
+                            if (item.IdLabor === data.IdLabor) {
+                                option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor} selected> ${item.Descripcion}</option>`;
+                            } else {
+                                option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
+                            }
+                            $("#work").append(option)
+                            $("#work").removeAttr("disabled");
+                        });
+                    }
+                    else {
+                        $("#work").prop('disabled', true);
+                        $(`#work`).selectpicker('refresh');
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+                console.log(data);
+            });
 
-                $("#work").attr("disabled", true)
-                $("#work").selectpicker({ title: "Elige un nueva labor." });
-                $("#work").val('default');
-                $("#work").selectpicker("refresh");
+            $("#pdm-image-list").empty();
+            $(`#table-part-daily-body`).append(tr);
+            $(`.form-add-item-part-daily`).removeAttr("name", `daily-item-${getIdForm}`)
+            //Refresh Item
+            $("#consumer").val('default');
+            $("#consumer").selectpicker({ title: "Elige un nuevo consumidor." });
+            $("#consumer").selectpicker("refresh");
 
-                $(`#star-time`).val("00:00");
-                $(`#end-time`).val("00:00");
-                $(`#star-horometer`).val("0.00");
-                $(`#end-horometer`).val("0.00");
-            })
+            $("#activity").selectpicker({ title: "Elige un nueva actividad." });
+            $("#activity").val('default');
+            $("#activity").selectpicker("refresh");
+
+            $("#work").attr("disabled", true)
+            $("#work").selectpicker({ title: "Elige un nueva labor." });
+            $("#work").val('default');
+            $("#work").selectpicker("refresh");
+
+            $(`#star-time`).val("00:00");
+            $(`#end-time`).val("00:00");
+            $(`#star-horometer`).val("0.00");
+            $(`#end-horometer`).val("0.00");
+        })
         //Submit Add Server Daily
         $(`#form-add-daily-part`).submit((event) => {
             event.preventDefault();
@@ -1665,7 +1825,7 @@
             $(".part-items").each(function () {
                 let IdParteDiario = $(this).attr("id").split("-").pop();
                 let partDataDaily = {
-                    IdParteDiario: IdParteDiario,
+                    IdParte: IdParteDiario,
                     IdConsumidor: $(this).children(".part-items-consumer").attr("id"), 
                     IdActividad: $(this).children(".part-items-activity").attr("id"), 
                     IdLabor: $(this).children(".part-items-work").attr("id"),
@@ -1676,19 +1836,22 @@
                 }
                 dailies.push(partDataDaily);
             })
-
+            const data = localStorage.getItem("data");
+            const userOk = JSON.parse(data);
             let PDM_PARTE_DIARIO_MAQUINARIA = JSON.stringify({
                 IdParte: IdParteDefault,
                 TablaDiario: dailies,
-                IdUsuario: user.CodUsuario
+                IdUsuario: userOk.CodUsuario
             })
-
+            console.log(PDM_PARTE_DIARIO_MAQUINARIA);
+           
             axios.post(`${URL}/PDMParteDiarioMaquinaria/Agregar`, PDM_PARTE_DIARIO_MAQUINARIA, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 }
-            }).then(response => {
+            })
+            .then(response => {
                 console.log(response.data);
                 $.notify({
                     // options
@@ -1697,6 +1860,116 @@
                     // settings
                     type: 'success',
                     delay: 100,
+                });
+                axios.get(`${URL}/PDMParteDiarioMaquinaria/Index`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        IdParte: JSON.parse(dataPDM).IdParte
+                    }
+                })
+                .then(response => {
+                    if (response.data.length > 0) {
+                        $("#pdm-image-list").empty();
+                        $(`#table-part-daily-body`).empty();
+                        response.data.map((pdm, index) => {
+                            let startHour = formatDateTimeCSharpToJavascript(pdm.HoraInicio, false)
+                            startnewHour = startHour.split("T")[1];
+                            startnewHour = `${startnewHour.split(":")[0]}:${startnewHour.split(":")[1]}`;
+                            let endHour = formatDateTimeCSharpToJavascript(pdm.HoraFin, false)
+                            endnewHour = endHour.split("T")[1];
+                            endnewHour = `${endnewHour.split(":")[0]}:${endnewHour.split(":")[1]}`;
+
+                            let tr = $(`
+                                <tr class="d-flex part-items pdm" id="daily-item-${pdm.IdParteDiario}">
+                                    <td class="col-1 text-center">${index + 1}</th>
+                                    <td class="col-2 part-items-consumer text-left" id=${pdm.IdConsumidor}>${pdm.IdConsumidor}</td>
+                                    <td class="col-2 part-items-star-time text-center" id=${startHour}> ${startnewHour} </td>
+                                    <td class="col-2 part-items-end-time text-center" id=${endHour}> ${endnewHour} </td>
+                                    <td class="col-1 part-items-activity text-left" id=${pdm.IdActividad}>${pdm.IdActividad}</td>
+                                    <td class="col-1 part-items-work text-left" id=${pdm.IdLabor}>${pdm.IdLabor}</td>
+                                    <td class="col-1 part-items-star-horometer text-center" id=${pdm.HorometroInicio}>${pdm.HorometroInicio}</td>
+                                    <td class="col-1 part-items-end-horometer text-center" id=${pdm.HorometroFinal}>${pdm.HorometroFinal}</td> 
+                                    <td class="col-1 part-items-end-edit text-center"> <a href="#" id=${pdm.IdParteDiario}> Editar </a> </td>
+                                </tr>
+                                `);
+                            //Bind Event
+                            tr.children("td").children("a").bind("click", (event) => {
+                                event.preventDefault();
+                                let IdParte = $(event.target).parent().parent().attr("id").split("-").pop();
+                                let data = {
+                                    IdParte: IdParte,
+                                    IdConsumidor: $(event.target).parent().parent().children(".part-items-consumer").attr("id"),
+                                    HoraInicio: $(event.target).parent().parent().children(".part-items-star-time").attr("id"),
+                                    HoraFin: $(event.target).parent().parent().children(".part-items-end-time").attr("id"),
+                                    IdActividad: $(event.target).parent().parent().children(".part-items-activity").attr("id"),
+                                    IdLabor: $(event.target).parent().parent().children(".part-items-work").attr("id"),
+                                    HorometroInicio: $(event.target).parent().parent().children(".part-items-star-horometer").attr("id"),
+                                    HorometroFin: $(event.target).parent().parent().children(".part-items-end-horometer").attr("id")
+                                }
+
+                                let newHoraInicio = changeDateSimbol(data.HoraInicio.split("T")[0], "-")
+                                let newHoraFin = changeDateSimbol(data.HoraFin.split("T")[0], "-")
+                                $(`.form-add-item-part-daily`).attr(`name`, `daily-item-${data.IdParte}`);
+
+                                $(`#star-date`).val(newHoraInicio);
+                                $(`#end-date`).val(newHoraFin);
+                                $(`#star-time`).val(data.HoraInicio.split("T").pop());
+                                $(`#end-time`).val(data.HoraFin.split("T").pop());
+                                $(`#star-horometer`).val(data.HorometroInicio);
+                                $(`#end-horometer`).val(data.HorometroFin);
+                                $(`#consumer`).val(data.IdConsumidor);
+                                $("#consumer").selectpicker("refresh");
+                                $(`#activity`).val(data.IdActividad);
+                                $("#activity").selectpicker("refresh");
+                                $(event.target).parent().parent().remove();
+                                let dataActividad = JSON.stringify({
+                                    IdActividad: data.IdActividad,
+                                })
+                                //Work for Activity
+                                axios.get(`${URL}/PDMLabor/`, {
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                    params: {
+                                        IdActividad: JSON.parse(dataActividad).IdActividad,
+                                    }
+                                })
+                                    .then(response => {
+                                        $(`#work`).empty();
+                                        if (response.data.length > 0) {
+                                            response.data.map((item, index) => {
+                                                $("#work").selectpicker('refresh');
+                                                let option;
+                                                if (item.IdLabor === data.IdLabor) {
+                                                    option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor} selected> ${item.Descripcion}</option>`;
+                                                } else {
+                                                    option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
+                                                }
+                                                $("#work").append(option)
+                                                $("#work").removeAttr("disabled");
+                                            });
+                                        }
+                                        else {
+                                            $("#work").prop('disabled', true);
+                                            $(`#work`).selectpicker('refresh');
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.log(error);
+                                    });
+                                console.log(data);
+                            });
+                            $(`#table-part-daily-body`).append(tr);
+
+                        })
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
                 });
             }).catch(error => {
                 console.log(error)
