@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AGAServerDev.Contexts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,9 +19,12 @@ namespace AGAServerDev.Models
         public string IdImplemento { get; set; }
         public string IdOperario { get; set; }
         public string IdTurno { get; set; }
+        public string Turno { get; set; }
         public string IdEstado { get; set; }
+        public string Estado { get; set; }
         public byte? Situacion { get; set; }
 
         public virtual ICollection<PDM_OPERARIO> PDM_OPERARIO { get; set; }
+        public virtual ICollection<PDM_ESTADO> PDM_ESTADO { get; set; }
     }
 }

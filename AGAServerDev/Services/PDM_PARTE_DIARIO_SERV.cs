@@ -114,7 +114,9 @@ namespace AGAServerDev.Services
                                 IdMaquinaria = t.IdMaquinaria,
                                 IdOperario = t.IdOperario, 
                                 IdEstado = t.IdEstado,
+                                Estado = t.Estado,
                                 IdTurno = t.IdTurno,
+                                Turno = t.Turno,
                             }).ToList();
 
                         ctxTrans.Commit(); // OK

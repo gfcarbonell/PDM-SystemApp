@@ -32,42 +32,138 @@
         </form>
     </div>
     @Html.Hidden("RedirectTo", Url.Action("Index", "PDMHome"));
+    @Html.Hidden("RedirectToList", Url.Action("CheckList", "PDMHome"));
 </div>
 @section scripts {
     <script type="text/javascript">
-        $(() => {
-            $(`#form-login`).submit((event) => {
-                event.preventDefault();
+        $(document).ready(($) => {
+            //Upload LocalStorage
+            const data = localStorage.getItem("data");
+            const user = JSON.parse(data);
+            if (user) {
+                let url = $("#RedirectToList").val(); location.href = url;
+            }
+            else {
+               
+                let checkList = false;
+                let mitigate = false;
+                
+                //Send Login
+                $(`#form-login`).submit((event) => {
+                    event.preventDefault();
+                    let auth_user = JSON.stringify({
+                        Usuario: $(`#username`).val(),
+                        Contrasenia: $(`#password`).val(),
+                        CodModulo: "A00"
+                    });
+                    //Get Server -> Data User
+                    axios.post(`${URL}/AuthUser/Login`, auth_user, {
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    .then(response => {
+                        if (response.data) {
+                            localStorage.setItem("data", JSON.stringify(response.data)); //Set LocalStorage User
+                            $(`#error-login`).empty();
+                        }
+                        else {
+                            localStorage.clear();
+                            $(`#error-login`).text("Las credenciales proporcionadas no son correctos.")
+                            throw ("error de logueo")
+                        }
+                        return response;
+                    })
+                    .then(response => {
+                        let auth_user = JSON.stringify({
+                            CodUsuario: response.data.CodUsuario,
+                            CodModulo: "A11"
+                        });
+                        axios.post(`${URL}/AuthUser/Permisos`, auth_user, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => {
+                            checkList = response.data !== 0 ? true : false;
+                            localStorage.removeItem("checkList");
+                            localStorage.setItem("checkList", JSON.stringify(checkList));
+                        })
+                        .catch(error => {
+                            checkList = false;
+                            localStorage.removeItem("checkList");
+                            localStorage.setItem("checkList", JSON.stringify(checkList));
+                            console.log(error);
+                        });
+                        return response;
+                    })
+                    .then(response => {
+                        let auth_user = JSON.stringify({
+                            CodUsuario: response.data.CodUsuario,
+                            CodModulo: "A12"
+                        });
+                        axios.post(`${URL}/AuthUser/Permisos`, auth_user, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => {
+                            mitigate = response.data !== 0 ? true : false;
+                            localStorage.removeItem("mitigate");
+                            localStorage.setItem("mitigate", JSON.stringify(mitigate));
+                        })
+                        .catch(error => {
+                            mitigate = false;
+                            localStorage.removeItem("mitigate");
+                            localStorage.setItem("mitigate", JSON.stringify(mitigate));
+                            console.log(error);
+                        });
+                        return response;
+                    })
+                    .then(response => {
+                        let auth_user = JSON.stringify({
+                            CodUsuario: response.data.CodUsuario,
+                            CodModulo: "A13"
+                        });
+                        axios.post(`${URL}/AuthUser/Permisos`, auth_user, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => {
+                            partDaily = response.data !== 0 ? true : false;
+                            localStorage.removeItem("partDaily");
+                            localStorage.removeItem("partDailyList");
+                            localStorage.setItem("partDaily", JSON.stringify(partDaily));
+                            localStorage.setItem("partDailyList", JSON.stringify(partDaily));
+                        })
+                        .catch(error => {
+                            partDaily = false;
+                            localStorage.removeItem("partDaily");
+                            localStorage.removeItem("partDailyList");
+                            localStorage.setItem("partDailyList", JSON.stringify(partDaily));
+                            localStorage.setItem("partDaily", JSON.stringify(partDaily));
+                            console.log(error);
+                        });
+                        return response;
+                    })
+                    .then(response => {
 
-                let auth_user = JSON.stringify({
-                    Usuario: $(`#username`).val(),
-                    Contrasenia: $(`#password`).val(),
-                    CodModulo: "A00"
-                });
-                   
-                //Get Server -> Data User
-                axios.post(`${URL}/AuthUser/Login`, auth_user, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                    }
-                }).then(response => {   
-                    if (response.data) {
-                        localStorage.setItem("data", JSON.stringify(response.data))
-                        $(`#error-login`).empty();
-                        let url = $("#RedirectTo").val();
-                        location.href = url;
-                    }
-                    else {
-                        $(`#error-login`).text("Las credenciales proporcionadas no son correctos.")
-                    }
+                        setTimeout(function () {
+                            let url = $("#RedirectToList").val(); location.href = url;
+                        }, 150);
+                        
+                    })
+                    .catch(error => {
+                        localStorage.clear();
+                        console.log(error);
+                    });
                 })
-                .catch(error => {
-                    console.log(error);
-                });
-
-
-            })
+            }
         })
     </script>
 }

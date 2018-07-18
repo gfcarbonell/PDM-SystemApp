@@ -53,6 +53,7 @@ namespace AGAServerDev.Controllers
             ViewBag.IdTipoImplemento = parte.IdTipoImplemento;
             ViewBag.IdImplemento = parte.IdImplemento;
             ViewBag.IdMaquinaria = parte.IdMaquinaria;
+            ViewBag.IdOperario = parte.IdOperario;
             ViewBag.IdEstado = parte.IdEstado;
             ViewBag.Fecha = parte.Fecha;
             ViewBag.IdTurno = parte.IdTurno;

@@ -10,26 +10,26 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="machinery">Maquinarias</label>
-                <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="10" disabled required></select>
+                <select class="form-control selectpicker" data-live-search="true" id="machinery" data-size="5" disabled required></select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="implementType">Tipos de implemento</label>
-                <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="10" disabled required>
+                <select class="form-control selectpicker" data-live-search="true" id="implementType" data-size="5" disabled required>
                     <option data-tokens="000" value="000">---</option>
                 </select>
                 <p class="text-danger" id="error-implementType"></p>
             </div>
             <div class="form-group col-md-6">
                 <label for="implement">Implementos</label>
-                <select class="form-control selectpicker" data-live-search="true" id="implement" data-size="10" disabled required></select>
+                <select class="form-control selectpicker" data-live-search="true" id="implement" data-size="5" disabled required></select>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="operator">Operarios</label>
-                <select class="form-control selectpicker" data-live-search="true" id="operator" data-size="10" disabled required></select>
+                <select class="form-control selectpicker" data-live-search="true" id="operator" data-size="5" disabled required></select>
             </div>
             <div class="form-group col-md-6">
                 <label for="turn">Turno</label>
@@ -69,34 +69,36 @@
     </form>
 </div>
 
-@Html.Hidden("RedirectToCheckList", Url.Action("CheckList", "PDMHome"));
+@Html.Hidden("RedirectToList", Url.Action("CheckList", "PDMHome"));
 
 @section scripts {
 
     <script type="text/javascript">
-        $(() => {
+        $(document).ready(($) => {
             let data = localStorage.getItem("data");
             const user = JSON.parse(data);
+           
+            if (!user) {
+                let url = $("#RedirectToLogin").val(); location.href = url;
+            }
+            else {
+            const checkListData = localStorage.getItem("checkList");
+            const checkList = JSON.parse(checkListData);
+            if (checkList===false) {
+                let url = $("#RedirectToList").val(); location.href = url;
+            }
             //Get Date
             var now = new Date();
             var day = ("0" + now.getDate()).slice(-2);
             var month = ("0" + (now.getMonth() + 1)).slice(-2);
             var today = now.getFullYear() + "-" + (month) + "-" + (day);
 
-            if (!user) {
-                let url = $("#RedirectToLogin").val(); location.href = url;
-            }
-            else {
-
-
-            }
-
             //Initializate Date
             $('#date').val(today);
 
             //GET -> Controller:Tipo Implemento/Index
             //Inicializar Operario
-            /*
+            
             $('#operator').on('loaded.bs.select', (e) => {
                 const dataOperario = JSON.stringify({
                     estado: 1
@@ -113,7 +115,7 @@
                 })
                 .then(response => {
                     response.data.map((item, index) => {
-                        let option = `<option data-tokens=${item.IdPersonal} value=${item.IdOperador}> ${item.Nombre} </option>`;
+                        let option = `<option data-tokens=${item.IdPersonal} value=${item.IdOperario}> ${item.Nombre} </option>`;
                         $("#operator").append(option)
                         $("#operator").selectpicker('refresh');
                         $("#operator").removeAttr("disabled");
@@ -122,7 +124,7 @@
                 .catch(error => {
                     console.log(error);
                 });
-            }); */
+            }); 
             //GET -> Controller:Tipo Implemento/Index
             //Inicializar Tipo Implemento
             $('#implementType').on('loaded.bs.select', (e) => {
@@ -132,17 +134,17 @@
                         'Content-Type': 'application/json',
                     }
                 })
-                    .then(response => {
-                        response.data.map((item, index) => {
-                            let option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
-                            $("#implementType").append(option)
-                            $("#implementType").selectpicker('refresh');
-                            $("#implementType").removeAttr("disabled");
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error);
+                .then(response => {
+                    response.data.map((item, index) => {
+                        let option = `<option data-tokens=${item.IdTipoImplemento} value=${item.IdTipoImplemento}> ${item.Descripcion} </option>`;
+                        $("#implementType").append(option)
+                        $("#implementType").selectpicker('refresh');
+                        $("#implementType").removeAttr("disabled");
                     });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
             });
             //GET -> Controller:PDMTurno/Index
             //Inicializar Turno
@@ -277,19 +279,19 @@
                         $(`#table-implement`).empty();
                         let table =
                             `
-                                    <table class="table table-hover" id="system-${implemento.IdSistema}" >
-                                        <thead class="thead-light text-white" id="systems-head">
-                                            <tr class="d-flex" id="systems-head-th">
-                                                <th class="col-1 text-center font-weight-bold">#</th>
-                                                <th class="col-5 text-left font-weight-bold">
-                                                    ${implemento.Sistema}
-                                                </th>
-                                                <th class="col-2 text-center font-weight-bold">OK</th>
-                                                <th class="col-2 text-center font-weight-bold">NO OK</th>
-                                                <th class="col-2 text-center font-weight-bold">N.A.</th>
-                                            </tr>
-                                        </thead>
-                                    </table>`;
+                                <table class="table table-hover" id="system-${implemento.IdSistema}" >
+                                    <thead class="thead-light text-white" id="systems-head">
+                                        <tr class="d-flex" id="systems-head-th">
+                                            <th class="col-1 text-center font-weight-bold">#</th>
+                                            <th class="col-5 text-left font-weight-bold">
+                                                ${implemento.Sistema}
+                                            </th>
+                                            <th class="col-2 text-center font-weight-bold">OK</th>
+                                            <th class="col-2 text-center font-weight-bold">NO OK</th>
+                                            <th class="col-2 text-center font-weight-bold">N.A.</th>
+                                        </tr>
+                                    </thead>
+                                </table>`;
                         $("#table-implement").append(table);
                         //Observation
                         $("#table-implement").append(`<div class="table  d-flex justify-content-between" id="observation-${implemento.IdSistema}"/>`);
@@ -301,14 +303,14 @@
                         var tbody = "<tbody>";
                         response.data.map((item, index) => {
                             let tr = `
-                                            <tr class="d-flex components" id="component-${item.IdComponente}">
-                                                <td class="col-1 text-center">${indice}</td>
-                                                <td class="col-5 text-left">${item.Componente}</td>
-                                                <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${item.IdComponente}></td>
-                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
-                                                <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
-                                            </tr>
-                                        `;
+                                    <tr class="d-flex components" id="component-${item.IdComponente}">
+                                        <td class="col-1 text-center">${indice}</td>
+                                        <td class="col-5 text-left">${item.Componente}</td>
+                                        <td class="col-2 text-center"><input type="radio" checked class="text-center" value=0 name=${item.IdComponente}></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=1 name=${item.IdComponente} ></td>
+                                        <td class="col-2 text-center"><input type="radio" class="text-center" value=2 name=${item.IdComponente} ></td>
+                                    </tr>
+                                `;
                             tbody = tbody + tr;
                             indice = indice + 1;
                         })
@@ -326,17 +328,17 @@
                                     if (length == 0) {
                                         let observation =
                                             `
-                                                    <div class=" col-md-8">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
-                                                        </div>
-                                                        <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
+                                                <div class=" col-md-8">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <label for="observation-system-${parte.IdSistema}">Observaciones:</label>
                                                     </div>
-                                                    <div class="col-md-4" id="container-action-${parte.IdSistema}">
-                                                        <label for="system-action-${parte.IdSistema}">Acciones</label>
+                                                    <textarea class="form-control observations" rows="1" id="observation-system-${parte.IdSistema}"></textarea>
+                                                </div>
+                                                <div class="col-md-4" id="container-action-${parte.IdSistema}">
+                                                    <label for="system-action-${parte.IdSistema}">Acciones</label>
 
-                                                    </div>
-                                                `;
+                                                </div>
+                                            `;
                                         $(`#observation-${parte.IdSistema}`).append(observation);
                                         let select;
                                         if ($(`#action-${parte.IdSistema}`).children() > 0) {
@@ -516,7 +518,7 @@
                     console.log(error);
                 });
 
-            //Submit
+            //Submit Check List
             $(`#form-list`).submit((event) => {
                 event.preventDefault();
 
@@ -620,8 +622,8 @@
                     IdAccion: "00"
                 }]
 
-                const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData
-                console.log(observationsDefaultData)
+                const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData; 
+               
                 //Get Values - Main Head
                 let PDM_PARTE_DIARIO = JSON.stringify({
                     IdSucursal: $("#headquarters").val(),
@@ -629,15 +631,14 @@
                     IdImplemento: $("#implement").val(),
                     IdTipoImplemento: $("#implementType").val(),
                     Fecha: $("#date").val(),
-                    IdOperario: $("#operator").val() | "010129",
+                    IdOperario: $("#operator").val(),
                     IdTurno: $("#turn").val(),
                     IdUsuario: user.CodUsuario,
                     PDM_CHECKLIST: checkListData ,
                     PDM_OBSERVACION: obrData
                 });
-
-                console.log(PDM_PARTE_DIARIO);
-
+                console.log(PDM_PARTE_DIARIO)
+                //Post
                 axios.post(`${URL}/PDMParteDiario/Agregar`, PDM_PARTE_DIARIO, {
                     headers: {
                         'Accept': 'application/json',
@@ -674,7 +675,7 @@
                     console.log(response)
                 })
             })
-
+            }
         });
     </script>
 }
