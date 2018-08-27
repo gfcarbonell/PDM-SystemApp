@@ -35,7 +35,7 @@
     <footer class="bg-light border-top border-dark">
         <p class="text-center"><span class="font-weight-bold text-danger">&copy;Todos los derechos reservados:</span> <span class="font-weight-bold text-dark">Agrícola Andrea S.A.C. - @DateTime.Now.Year</span> </p>
     </footer>
-    @Html.Hidden("RedirectToLogin", Url.Action("Login", "PDMHome"));
+    @Html.Hidden("RedirectToLogin", Url.Action("Login", "PDMHome"))
 
 
     @Scripts.Render("~/bundles/jquery")
@@ -56,11 +56,7 @@
 
         const checkListData = localStorage.getItem("checkList");
         const checkList = JSON.parse(checkListData);
-        /*
 
-        <li>Html.ActionLink("Acerca de", "About", "PDMHome", new { area = "" }, new { class = "nav-link" })</li>
-            <li>Html.ActionLink("Contacto", "Contact", "PDMHome", new { area = "" }, new { class = "nav-link" })</li>
-        */
         if (user) {
             let navItem1="";
             if (checkList === true) {

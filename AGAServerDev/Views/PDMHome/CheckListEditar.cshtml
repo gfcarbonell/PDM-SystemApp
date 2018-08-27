@@ -187,8 +187,8 @@
                         <tbody id="table-part-daily-body"></tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-center align-content-center flex-column" id="pdm-image-list">
-                    <div class="d-flex justify-content-center align-content-center">
+                <div class="d-flex justify-content-center align-content-center flex-column">
+                    <div class="d-flex justify-content-center align-content-center" id="pdm-image-list">
                         <div class="loader">
 
                         </div>
@@ -266,10 +266,24 @@
         const partDailyData = localStorage.getItem("partDaily");
         const partDaily = JSON.parse(partDailyData);
 
+        if (mitigate === false) {
+            $("#send-check-list").hide();
+        }
         if (partDaily === false) {
+            $(`#add-part-daily`).hide();
             $(`#add-part-daily`).attr("disabled", true);
+            $(`#add-server-part-daily`).hide();
             $(`#add-server-part-daily`).attr("disabled", true);
+            $(`#add-fuel`).hide();
             $(`#add-fuel`).attr("disabled", true);
+
+            $(`#star-time`).attr("disabled", true);
+            $(`#end-date`).attr("disabled", true);
+            $(`#end-time`).attr("disabled", true);
+            $(`#activity`).attr("disabled", true);
+            $(`#work`).attr("disabled", true);
+            $(`#star-horometer`).attr("disabled", true);
+            $(`#end-horometer`).attr("disabled", true);
         }
 
 
@@ -307,7 +321,7 @@
 
         //GET -> Controller:PDMEstado/Index
         //Inicializar Turno
-        axios.get(`${URL}/PDMEstado/`, {
+        axios.get(`${URL}/PDMEstado/Index`, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -327,13 +341,12 @@
         
          //GET -> Controller:Tipo Implemento/Index
             //Inicializar Operario
-
         $('#operator').on('loaded.bs.select', (e) => {
             const dataOperario = JSON.stringify({
                 estado: 1
             })
 
-            axios.get(`${URL}/PDMOperario/`, {
+            axios.get(`${URL}/PDMOperario/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -360,15 +373,11 @@
                 console.log(error);
             });
         });
-        
-        
-
-
 
         //GET -> Controller:PDMTurno/Index
         //Inicializar Turno - disabled
         $('#turn').on('loaded.bs.select', (e) => {
-            axios.get(`${URL}/PDMTurno/`, {
+            axios.get(`${URL}/PDMTurno/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -396,7 +405,7 @@
         //GET -> Controller:PDMTurno/Index
         //Inicializar Activity 
         $('#activity').on('loaded.bs.select', (e) => {
-            axios.get(`${URL}/PDMActividad/`, {
+            axios.get(`${URL}/PDMActividad/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -409,7 +418,7 @@
 
                     $("#activity").append(option)
                     $("#activity").selectpicker('refresh');
-                    $("#activity").removeAttr("disabled");
+                    //$("#activity").removeAttr("disabled");
                 });
             })
             .catch(error => {
@@ -445,7 +454,7 @@
                     IdParte: IdParteDefault,
                     IdTipoImplemento: IdTipoImplementoDefault
                 })
-                axios.get(`${URL}/PDMCheckListImplemento/`, {
+                axios.get(`${URL}/PDMCheckListImplemento/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -656,7 +665,7 @@
         
         //Inicializar Sede - disabled
         $('#headquarters').on('loaded.bs.select', (e) => {
-            axios.get(`${URL}/PDMSucursal/`, {
+            axios.get(`${URL}/PDMSucursal/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -690,7 +699,7 @@
                     Estado: 1
                 })
                 //Implement for headquarters
-                axios.get(`${URL}/PDMImplemento/`, {
+                axios.get(`${URL}/PDMImplemento/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -727,7 +736,7 @@
                     console.log(error);
                 });
                 //Machinery for headquarters
-                axios.get(`${URL}/PDMMaquinaria/`, {
+                axios.get(`${URL}/PDMMaquinaria/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -763,7 +772,7 @@
                 });
 
                 //Consumer for headquarters
-                axios.get(`${URL}/PDMConsumidor/`, {
+                axios.get(`${URL}/PDMConsumidor/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -807,7 +816,7 @@
                 IdActividad: IdActividad,
             })
             //Work for Activity
-            axios.get(`${URL}/PDMLabor/`, {
+            axios.get(`${URL}/PDMLabor/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -816,8 +825,7 @@
                     IdActividad: JSON.parse(dataActividad).IdActividad,
                 }
             })
-            .then(response => {
-                    
+            .then(response => {    
                 $(`#work`).empty();
                 if (response.data.length > 0) {
                     response.data.map((item, index) => {
@@ -946,7 +954,7 @@
                 IdParte: 0,
                 IdTipoImplemento: id
             })
-            axios.get(`${URL}/PDMCheckListImplemento/`, {
+            axios.get(`${URL}/PDMCheckListImplemento/Index`, {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -1027,7 +1035,7 @@
 
                                 }
                                 else {
-                                    axios.get(`${URL}/PDMAccion/`, {
+                                    axios.get(`${URL}/PDMAccion/Index`, {
                                         headers: {
                                             'Accept': 'application/json',
                                             'Content-Type': 'application/json',
@@ -1097,7 +1105,7 @@
         })
         .then((response) => {
             let dataParte = JSON.stringify({
-                IdParte: 0
+                IdParte: IdParteDefault
             });
             //Add Components -> System
             response.data.map((sistema, index) => {
@@ -1305,7 +1313,7 @@
         let dataPDM = JSON.stringify({
             IdParte: IdParteDefault,
         })
-
+            console.log(dataPDM);
         //Get Part Daily Fuels 
         axios.get(`${URL}/PDMCombustible/Index`, {
             headers: {
@@ -1354,6 +1362,7 @@
         .then(response => {
             if (response.data.length > 0) {
                 $("#pdm-image-list").empty();
+                $("#loader-message").empty();
                 response.data.map((pdm, index) => {
                     let startHour = formatDateTimeCSharpToJavascript(pdm.HoraInicio, false)
                     startnewHour = startHour.split("T")[1];
@@ -1411,7 +1420,7 @@
                                 IdActividad: data.IdActividad,
                             })
                             //Work for Activity
-                            axios.get(`${URL}/PDMLabor/`, {
+                            axios.get(`${URL}/PDMLabor/Index`, {
                                 headers: {
                                     'Accept': 'application/json',
                                     'Content-Type': 'application/json',
@@ -1420,30 +1429,30 @@
                                     IdActividad: JSON.parse(dataActividad).IdActividad,
                                 }
                             })
-                                .then(response => {
-                                    $(`#work`).empty();
-                                    if (response.data.length > 0) {
-                                        response.data.map((item, index) => {
-                                            $("#work").selectpicker('refresh');
-                                            let option;
-                                            if (item.IdLabor === data.IdLabor) {
-                                                option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor} selected> ${item.Descripcion}</option>`;
-                                            } else {
-                                                option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
-                                            }
-                                            $("#work").append(option)
-                                            $("#work").removeAttr("disabled");
-                                        });
-                                    }
-                                    else {
-                                        $("#work").prop('disabled', true);
-                                        $(`#work`).selectpicker('refresh');
-                                    }
-                                })
-                                .catch(error => {
-                                    console.log(error);
-                                });
-                            console.log(data);
+                            .then(response => {
+                                $(`#work`).empty();
+                                if (response.data.length > 0) {
+                                    response.data.map((item, index) => {
+                                        $("#work").selectpicker('refresh');
+                                        let option;
+                                        if (item.IdLabor === data.IdLabor) {
+                                            option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor} selected> ${item.Descripcion}</option>`;
+                                        } else {
+                                            option = `<option data-tokens=${item.IdLabor} value= ${item.IdLabor}> ${item.Descripcion}</option>`;
+                                        }
+                                        $("#work").append(option)
+                                        $("#work").removeAttr("disabled");
+                                    });
+                                }
+                                else {
+                                    $("#work").prop('disabled', true);
+                                    $(`#work`).selectpicker('refresh');
+                                }
+                            })
+                            .catch(error => {
+                                console.log(error);
+                            });
+                      
                         });
 
                     }
@@ -1456,6 +1465,7 @@
                 })
             }
             else {
+                $("#pdm-image-list").empty();
                 $(`#loader-message`).text("Aun no hay registros.")
             }
         })
@@ -1606,7 +1616,7 @@
                 IdAccion: "00"
             }]
             const obrData = observationsData.length !== 0 ? observationsData : observationsDefaultData;
-            console.log(user)
+
             //Get Values - Main Head
             let PDM_PARTE_DIARIO = JSON.stringify({
                 IdParte: IdParteDefault,
@@ -1672,22 +1682,49 @@
                 $(`#error-consumer`).empty();
             }
 
-            //Comparation time
-            if ($("#star-time").val() >= $("#end-time").val()) {
-                $(`#error-star-datetime`).text("La hora inicial no debe ser mayor o igual a la hora final");
-                $(`#error-end-datetime`).text("La hora final no debe ser menor o igual a la hora inicial");
-                $.notify({
+            let X = $("#star-date").val() + "T" + $("#star-time").val();
+            let Y = $("#end-date").val() + "T" + $("#end-time").val();
+            console.log(X, Y);
+
+            //Comparation date 
+            if ($("#star-date").val() === $("#end-date").val()) {
+                if ($("#star-time").val() >= $("#end-time").val())
+                {
+                    $(`#error-star-datetime`).text("La hora inicial no debe ser mayor o igual a la hora final.");
+                    $(`#error-end-datetime`).text("La hora final debe mayor a la hora inicial.");
+
+                    $.notify({
+                        // options
+                        message: 'Error de Fecha'
+                    }, {
+                            // settings
+                            type: 'danger',
+                            delay: 100,
+                        });
+                    throw "Select time";
+                } 
+                else {
+                    $(`#error-star-datetime`).empty();
+                    $(`#error-end-datetime`).empty();
+                }
+            }
+            else if ($("#star-date").val() > $("#end-date").val()){
+                 $(`#error-start-datetime`).text("La fecha inicial no debe ser mayor a la fecha final.");
+                 $(`#error-end-datetime`).text("La fecha final debe ser mayor a la fecha inicial.");
+
+                 $.notify({
                     // options
-                    message: 'Error de tiempos'
-                }, {
+                    message: 'Error de Fecha'
+                 }, {
                         // settings
                         type: 'danger',
                         delay: 100,
                     });
-                throw "Select star-datetime";
-            } else {
-                $(`#error-star-datetime`).empty();
-                $(`#error-end-datetime`).empty();
+                 throw "Select date";
+            }
+            else {
+                 $(`#error-star-datetime`).empty();
+                 $(`#error-end-datetime`).empty();
             }
 
             //Activity
@@ -1709,7 +1746,7 @@
             //Comparation Horometer 
             if ($(`#star-horometer`).val() >= $(`#end-horometer`).val()) {
                 $(`#error-star-horometer`).text("El horométro inicial no debe ser mayor o igual al horométro final.");
-                $(`#error-end-horometer`).text("El horométro final no debe ser mayor o igual al horométro inicial.");
+                $(`#error-end-horometer`).text("El horométro final debe ser mayor al horométro inicial.");
 
                 $.notify({
                     // options
@@ -1820,7 +1857,7 @@
                     IdActividad: data.IdActividad,
                 })
                 //Work for Activity
-                axios.get(`${URL}/PDMLabor/`, {
+                axios.get(`${URL}/PDMLabor/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -1915,8 +1952,7 @@
                 TablaDiario: dailies,
                 IdUsuario: userOk.CodUsuario
             })
-            console.log(PDM_PARTE_DIARIO_MAQUINARIA);
-           
+            
             axios.post(`${URL}/PDMParteDiarioMaquinaria/Agregar`, PDM_PARTE_DIARIO_MAQUINARIA, {
                 headers: {
                     'Accept': 'application/json',
@@ -2001,7 +2037,7 @@
                                     IdActividad: data.IdActividad,
                                 })
                                 //Work for Activity
-                                axios.get(`${URL}/PDMLabor/`, {
+                                axios.get(`${URL}/PDMLabor/Index`, {
                                     headers: {
                                         'Accept': 'application/json',
                                         'Content-Type': 'application/json',

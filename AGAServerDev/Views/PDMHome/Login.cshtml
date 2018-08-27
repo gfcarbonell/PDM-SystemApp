@@ -31,8 +31,8 @@
             </div>
         </form>
     </div>
-    @Html.Hidden("RedirectTo", Url.Action("Index", "PDMHome"));
-    @Html.Hidden("RedirectToList", Url.Action("CheckList", "PDMHome"));
+    @Html.Hidden("RedirectTo", Url.Action("Index", "PDMHome"))
+    @Html.Hidden("RedirectToList", Url.Action("CheckList", "PDMHome"))
 </div>
 @section scripts {
     <script type="text/javascript">
@@ -155,7 +155,7 @@
 
                         setTimeout(function () {
                             let url = $("#RedirectToList").val(); location.href = url;
-                        }, 150);
+                        }, 200);
                         
                     })
                     .catch(error => {

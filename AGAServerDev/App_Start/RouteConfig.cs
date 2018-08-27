@@ -16,7 +16,7 @@ namespace AGAServerDev
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "PDMHome", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "PDMHome", action = "Login", id = UrlParameter.Optional }
             );
         }
     }

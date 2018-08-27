@@ -104,7 +104,7 @@
                     estado: 1
                 })
 
-                axios.get(`${URL}/PDMOperario/`, {
+                axios.get(`${URL}/PDMOperario/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -149,7 +149,7 @@
             //GET -> Controller:PDMTurno/Index
             //Inicializar Turno
             $('#turn').on('loaded.bs.select', (e) => {
-                axios.get(`${URL}/PDMTurno/`, {
+                axios.get(`${URL}/PDMTurno/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -170,7 +170,7 @@
             //GET -> Controller:Sede/Index
             //Inicializars Sede
             $('#headquarters').on('loaded.bs.select', (e) => {
-                axios.get(`${URL}/PDMSucursal/`, {
+                axios.get(`${URL}/PDMSucursal/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -196,7 +196,7 @@
                     estado: 1
                 })
                 //Implement for headquarters
-                axios.get(`${URL}/PDMImplemento/`, {
+                axios.get(`${URL}/PDMImplemento/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -227,7 +227,7 @@
                     });
 
                 //Machinery for headquarters
-                axios.get(`${URL}/PDMMaquinaria/`, {
+                axios.get(`${URL}/PDMMaquinaria/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -264,7 +264,7 @@
                     IdParte: 0,
                     IdTipoImplemento: id
                 })
-                axios.get(`${URL}/PDMCheckListImplemento/`, {
+                axios.get(`${URL}/PDMCheckListImplemento/Index`, {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
@@ -645,22 +645,20 @@
                         'Content-Type': 'application/json',
                     }
                 }).then(response => {
-                    console.log(response)
-                    $.notify({
-                        // options
-                        message: `Exito al Guardar!`
-                    },
+                        console.log(response)
+                        $.notify({
+                            // options
+                            message: `Exito al Guardar!`
+                        },
                         {
                             // settings
                             type: 'success',
                             delay: 100,
                         });
-                    $(`#headquarters`).selectpicker('refresh');
-                    $(`#machinery`).selectpicker('refresh');
-                    $(`#implement`).selectpicker('refresh');
-                    $(`#implementType`).selectpicker('refresh');
-                    $(`#operator`).selectpicker('refresh');
-                    $("#form-list")[0].reset();
+                    setTimeout(function () {
+                        let url = $("#RedirectToList").val(); location.href = url;
+                    }, 300);
+
                 }).catch(error => {
 
                     $.notify({
