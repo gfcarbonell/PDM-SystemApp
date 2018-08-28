@@ -61,28 +61,28 @@
                 const partDailyList = JSON.parse(partDailyListData);
 
                 ////////////////////////////////
-                var notifyProxy = $.connection.notifyHub;
-                notifyProxy.client.notifyPush = function (name, message) {
-                    let x = `<p>${name}</p>`;
+                //var notifyProxy = $.connection.notifyHub;
+                //notifyProxy.client.notifyPush = function (name, message) {
+                //    let x = `<p>${name}</p>`;
 
-                    $(".ok").append(x)
-                    Push.Permission.DEFAULT;
-                    Push.create("Hello world!", {
-                        body: "How's it hangin'?",
-                        timeout: 4000,
-                        onClick: function () {
-                            window.focus();
-                            this.close();
-                        }
-                    });
-                }
+                //    $(".ok").append(x)
+                //    Push.Permission.DEFAULT;
+                //    Push.create("Hello world!", {
+                //        body: "How's it hangin'?",
+                //        timeout: 4000,
+                //        onClick: function () {
+                //            window.focus();
+                //            this.close();
+                //        }
+                //    });
+                //}
 
-                $.connection.hub.start().done(function () {
-                    $(`#send`).click((event) => {
-                        //Server
-                        notifyProxy.server.sendMessage("Hola", "World");
-                    })
-                });
+                //$.connection.hub.start().done(function () {
+                //    $(`#send`).click((event) => {
+                //        //Server
+                //        notifyProxy.server.sendMessage("Hola", "World");
+                //    })
+                //});
                 ///////////////////////////////
                 /// Get Date now
                 var now = new Date();
