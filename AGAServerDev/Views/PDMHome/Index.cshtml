@@ -237,25 +237,25 @@
                         Estado: JSON.parse(dataImpl).estado
                     }
                 })
-                    .then(response => {
-                        $(`#machinery`).empty();
-                        if (response.data.length > 0) {
-                            response.data.map((item, index) => {
-                                $(`#machinery`).selectpicker('refresh');
-                                let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
-                                $(`#machinery`).append(option)
-                                $(`#machinery`).removeAttr("disabled");
-                            });
-                        }
-                        else {
-                            $(`#machinery`).prop('disabled', true);
+                .then(response => {
+                    $(`#machinery`).empty();
+                    if (response.data.length > 0) {
+                        response.data.map((item, index) => {
                             $(`#machinery`).selectpicker('refresh');
-                        }
+                            let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                            $(`#machinery`).append(option)
+                            $(`#machinery`).removeAttr("disabled");
+                        });
+                    }
+                    else {
+                        $(`#machinery`).prop('disabled', true);
+                        $(`#machinery`).selectpicker('refresh');
+                    }
 
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
             });
             //Change -> Type Implement
             $('#implementType').on('changed.bs.select	', (e) => {
@@ -345,7 +345,7 @@
 
                                         }
                                         else {
-                                            axios.get(`${URL}/PDMAccion/`, {
+                                            axios.get(`${URL}/PDMAccion/Index`, {
                                                 headers: {
                                                     'Accept': 'application/json',
                                                     'Content-Type': 'application/json',
@@ -479,7 +479,7 @@
 
                                                     }
                                                     else {
-                                                        axios.get(`${URL}/PDMAccion/`, {
+                                                        axios.get(`${URL}/PDMAccion/Index`, {
                                                             headers: {
                                                                 'Accept': 'application/json',
                                                                 'Content-Type': 'application/json',
@@ -638,6 +638,7 @@
                     PDM_OBSERVACION: obrData
                 });
                 console.log(PDM_PARTE_DIARIO)
+               
                 //Post
                 axios.post(`${URL}/PDMParteDiario/Agregar`, PDM_PARTE_DIARIO, {
                     headers: {
@@ -645,31 +646,31 @@
                         'Content-Type': 'application/json',
                     }
                 }).then(response => {
-                        console.log(response)
-                        $.notify({
-                            // options
-                            message: `Exito al Guardar!`
-                        },
-                        {
-                            // settings
-                            type: 'success',
-                            delay: 100,
-                        });
+                    $(`#send-check-list`).attr("disabled", true);
+                    console.log(response)
+                    $.notify({
+                        // options
+                        message: `Exito al Guardar!`
+                    },
+                    {
+                        // settings
+                        type: 'success',
+                        delay: 100,
+                    });
                     setTimeout(function () {
                         let url = $("#RedirectToList").val(); location.href = url;
                     }, 300);
 
                 }).catch(error => {
-
                     $.notify({
                         // options
-                        message: `Error al Guardar!`
+                        message: `Error al Guardar, verificar datos!`
                     },
-                        {
-                            // settings
-                            type: 'danger',
-                            delay: 100,
-                        });
+                    {
+                        // settings
+                        type: 'danger',
+                        delay: 100,
+                    });
                     console.log(response)
                 })
             })
