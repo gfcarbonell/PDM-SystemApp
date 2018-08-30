@@ -3,7 +3,7 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="headquarters">Sucursales - Sedes - Fundos</label>
-                <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters" required>
+                <select class="form-control selectpicker" data-live-search="true" id="headquarters" name="headquarters" disabled required>
                     <option data-tokens="000" value="000">---</option>
                 </select>
                 <p class="text-danger" id="error-headquarters"></p>
@@ -176,17 +176,102 @@
                         'Content-Type': 'application/json',
                     }
                 })
-                    .then(response => {
-                        response.data.map((item, index) => {
-                            let option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal}> ${item.Descripcion} </option>`;
-                            $("#headquarters").append(option)
-                            $("#headquarters").selectpicker('refresh');
-                            $("#headquarters").removeAttr("disabled");
+                .then(response => {
+                    response.data.map((item, index) => {
+                        //let option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal}> ${item.Descripcion} </option>`;
+                        let option = "";
+                        if (item.IdSucursal === user.CodSucursal) {
+                            option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal} selected> ${item.Descripcion} </option>`;
+                        }
+                        else {
+                            option = `<option data-tokens=${item.IdSucursal} value=${item.IdSucursal}> ${item.Descripcion} </option>`;
+                        }
+                        $("#headquarters").append(option)
+                        $("#headquarters").selectpicker('refresh');
+                        //$("#headquarters").removeAttr("disabled");
+
+                        let dataImpl = JSON.stringify({
+                            IdSucursal: user.CodSucursal, 
+                            Estado:1
                         });
-                    })
-                    .catch(error => {
-                        console.log(error);
+             
+                        //Implement for headquarters
+                        axios.get(`${URL}/PDMImplemento/Index`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            params: {
+                                IdSucursal: JSON.parse(dataImpl).IdSucursal,
+                                Estado: JSON.parse(dataImpl).Estado
+                            }
+                        })
+                        .then(response => {
+                            $(`#implement`).empty();
+                            if (response.data.length > 0) {
+                                response.data.map((item, index) => {
+                                    let option;
+                                    if (data.IdImplemento === item.IdConsumidor) {
+
+                                        option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor} selected> ${item.Descripcion}</option>`;
+                                    }
+                                    else {
+                                        option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                    }
+                                    $("#implement").selectpicker('refresh');
+                                    $("#implement").append(option)
+                                    $("#implement").removeAttr("disabled");
+                                });
+                            }
+                            else {
+                                $("#implement").prop('disabled', true);
+                                $(`#implement`).selectpicker('refresh');
+                            }
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                        //Machinery for headquarters
+                        axios.get(`${URL}/PDMMaquinaria/Index`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            params: {
+                                IdSucursal: JSON.parse(dataImpl).IdSucursal,
+                                Estado: JSON.parse(dataImpl).Estado
+                            }
+                        })
+                        .then(response => {
+                            $(`#machinery`).empty();
+                            if (response.data.length > 0) {
+                                response.data.map((item, index) => {
+                                    let option;
+                                    if (data.IdMaquinaria === item.IdConsumidor) {
+                                        option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor} selected> ${item.Descripcion}</option>`;
+                                    } else {
+                                        option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                                    }
+                                    $(`#machinery`).selectpicker('refresh');
+                                    $(`#machinery`).append(option)
+                                    $(`#machinery`).removeAttr("disabled");
+                                });
+                            }
+                            else {
+                                $(`#machinery`).prop('disabled', true);
+                                $(`#machinery`).selectpicker('refresh');
+                            }
+
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                     });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
             });
             //Change -> Sede
             $('#headquarters').on('changed.bs.select	', (e) => {
@@ -206,25 +291,25 @@
                         Estado: JSON.parse(dataImpl).estado
                     }
                 })
-                    .then(response => {
-                        $(`#implement`).empty();
-                        if (response.data.length > 0) {
-                            response.data.map((item, index) => {
-                                $("#implement").selectpicker('refresh');
-                                let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
-                                $("#implement").append(option)
-                                $("#implement").removeAttr("disabled");
-                            });
-                        }
-                        else {
-                            $("#implement").prop('disabled', true);
-                            $(`#implement`).selectpicker('refresh');
-                        }
+                .then(response => {
+                    $(`#implement`).empty();
+                    if (response.data.length > 0) {
+                        response.data.map((item, index) => {
+                            $("#implement").selectpicker('refresh');
+                            let option = `<option data-tokens=${item.IdConsumidor} value= ${item.IdConsumidor}> ${item.Descripcion}</option>`;
+                            $("#implement").append(option)
+                            $("#implement").removeAttr("disabled");
+                        });
+                    }
+                    else {
+                        $("#implement").prop('disabled', true);
+                        $(`#implement`).selectpicker('refresh');
+                    }
 
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
                 //Machinery for headquarters
                 axios.get(`${URL}/PDMMaquinaria/Index`, {
@@ -610,7 +695,6 @@
                                 IdAccion: valueAction
                             })
                         }
-
                     })
                 });
 

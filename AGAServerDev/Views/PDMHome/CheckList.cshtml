@@ -97,7 +97,7 @@
                     IdSucursal: user.CodSucursal
                 });
 
-                if (mitigate == true) {
+                if (mitigate === true) {
                     //Get Part Daily
                     axios.get(`${URL}/PDMParteDiario/Todos`, {
                         headers: {
@@ -158,7 +158,7 @@
                         console.log(error);
                     });
                 }
-                else if (partDailyList == true) {
+                else if (partDailyList === true) {
                      //Get Part Daily
                      axios.get(`${URL}/PDMParteDiario/Todos`, {
                         headers: {
@@ -188,24 +188,24 @@
                                 let classTextMitigate = item.IdEstado === "02" ? "text-light font-weight-bold" : "";
                                 let classHrefMitigate = item.IdEstado === "02" ? "text-light font-weight-bold" : "font-weight-bold";
 
-                                let textMitigate = item.IdEstado === "02" && mitigate === true ? "Parte diario" : "Parte diario";
-
+                                //let textMitigate = item.IdEstado === "02" && mitigate === true ? "Visualizar" : "Parte diario";
+                                let textMitigate = item.IdEstado === "02" ? "Visualizar" : "Parte Diario";
                                 let tr = $(`
-                            <tr class=${classMitigate}>
-                                <td class="text-center ${classTextMitigate}" scope="row">${index + 1}</th>
-                                <td class="text-center ${classTextMitigate}">${item.IdSucursal}</td>
-                                <td class="text-center ${classTextMitigate}">${item.IdMaquinaria}</td>
-                                <td class="text-center ${classTextMitigate}">${item.IdTipoImplemento}</td>
-                                <td class="text-center ${classTextMitigate}">${item.IdImplemento}</td>
-                                <td class="text-center ${classTextMitigate}">${item.IdOperario}</td>
-                                <td class="text-center ${classTextMitigate}">${item.Turno}</td>
-                                <td class="text-center ${classTextMitigate}">${today}</td>
-                                <td class="text-center ${classTextMitigate}">${item.Estado}</td>
-                                <td class="text-center ${classTextMitigate}">
-                                    <a class="${classHrefMitigate}" href="/PDMHome/CheckListEditar/${item.IdParte}"> ${textMitigate} </a>
-                                </td>
-                            </tr>
-                            `);
+                                    <tr class=${classMitigate}>
+                                        <td class="text-center ${classTextMitigate}" scope="row">${index + 1}</th>
+                                        <td class="text-center ${classTextMitigate}">${item.IdSucursal}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.IdMaquinaria}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.IdTipoImplemento}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.IdImplemento}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.IdOperario}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.Turno}</td>
+                                        <td class="text-center ${classTextMitigate}">${today}</td>
+                                        <td class="text-center ${classTextMitigate}">${item.Estado}</td>
+                                        <td class="text-center ${classTextMitigate}">
+                                            <a class="${classHrefMitigate}" href="/PDMHome/CheckListEditar/${item.IdParte}"> ${textMitigate} </a>
+                                        </td>
+                                    </tr>
+                                `);
 
                                 $(`#tbody-daily`).append(tr);
                             })

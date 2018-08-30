@@ -42,7 +42,7 @@ namespace AGAServerDev.Services
                         IdSucursalParameter.SqlDbType = SqlDbType.VarChar;
                         IdSucursalParameter.Value = IdSucursal;
 
-                        var consumidores = db.Database.SqlQuery<PDM_CONSUMIDOR>("dbo.[PR_PDM_CONSUMIDOR_QRY_Sucursal] @IdSucursal",
+                        var consumidores = db.Database.SqlQuery<PDM_CONSUMIDOR>("[dbo].[PR_PDM_CONSUMIDOR_QRY_Sucursal] @IdSucursal",
                             IdSucursalParameter
                         ).ToList();
 

@@ -331,6 +331,12 @@
             response.data.map(item => {
                 if (item.IdEstado === IdEstado) {
                     $(`#status`).val(item.Descripcion);
+                   
+                    if (item.IdEstado === "02") {
+                        $(`#add-part-daily`).hide();
+                        $(`#add-server-part-daily`).hide();
+                        $(`#add-fuel`).hide();
+                    } 
                 }
             })
         })
@@ -1642,20 +1648,20 @@
                 $(`#send-check-list`).attr("disabled", true);
                 $.notify({
                     // options
-                    message: `Exito al Actualizar!`
+                    message: `Exito al Mitigar!`
                 },
-                    {
-                        // settings
-                        type: 'success',
-                        delay: 100,
-                    });
+                {
+                    // settings
+                    type: 'success',
+                    delay: 100,
+                });
                 $("#form-list")[0].reset();
 
             }).catch(error => {
                 console.log(response)
                 $.notify({
                     // options
-                    message: `Error al Actualizar!, verificar datos!`
+                    message: `Error al Mitigar!, verificar datos!`
                 },
                 {
                     // settings
